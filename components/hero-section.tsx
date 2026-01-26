@@ -1,103 +1,128 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import Image from 'next/image';
 
 interface HeroSectionProps {
-  onNavigate: (view: 'hero' | 'dashboard' | 'worldcoin') => void;
+  onNavigate: (view: 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'mining') => void;
 }
 
 export default function HeroSection({ onNavigate }: HeroSectionProps) {
   return (
-    <div className="w-full max-w-md mx-auto px-4 space-y-8 py-12 relative">
-      {/* Mystical Background Effects */}
-      <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 right-0 w-80 h-80 bg-primary/5 rounded-full blur-3xl" />
+    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
+      {/* Fondo mystical con imagen */}
+      <div className="fixed inset-0 -z-20">
+        <Image
+          src="/images/file-000000007e84720eaf0ed3f5482d3195.png"
+          alt="Marisol Background"
+          fill
+          className="object-cover object-center"
+          priority
+        />
+        {/* Overlay oscuro para garantizar legibilidad */}
+        <div className="absolute inset-0 bg-black/30" />
       </div>
 
-      {/* Main Image Section */}
-      <div className="flex flex-col items-center gap-6">
-        {/* Marisol Character Circle with Mystical Effects */}
-        <div className="relative w-72 h-72 flex items-center justify-center">
-          {/* Outer glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent rounded-full blur-3xl animate-pulse" />
-          
-          {/* Decorative circles */}
-          <div className="absolute inset-0 border border-primary/30 rounded-full" />
-          <div className="absolute inset-4 border border-primary/20 rounded-full" />
-          
-          {/* Character image */}
-          <div className="relative w-64 h-64 flex items-center justify-center">
+      {/* Partículas de brillo dorado animadas */}
+      <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary rounded-full opacity-40 animate-pulse" />
+        <div className="absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-primary rounded-full opacity-50 animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute bottom-1/3 left-1/3 w-1 h-1 bg-primary rounded-full opacity-60 animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      {/* Contenedor central */}
+      <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center gap-8 relative z-10">
+        
+        {/* Cabeza mystical (parte superior) */}
+        <div className="text-center space-y-4">
+          <div className="relative w-32 h-32 mx-auto">
             <Image
               src="/marisol-character.jpg"
-              alt="Marisol Ancestral"
-              width={256}
-              height={256}
-              priority
-              className="w-full h-full object-cover rounded-full shadow-2xl shadow-primary/40"
+              alt="Marisol Eyes"
+              width={128}
+              height={128}
+              className="w-full h-full object-cover rounded-full shadow-2xl shadow-primary/50"
+            />
+            {/* Glow alrededor de los ojos */}
+            <div className="absolute inset-0 rounded-full border-2 border-primary/40 animate-pulse" />
+          </div>
+        </div>
+
+        {/* Texto principal - Mensaje Poderoso */}
+        <div className="text-center space-y-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-pretty leading-tight tracking-tight">
+            <span className="text-primary block font-black">NO ES TU FUTURO,</span>
+            <span className="text-foreground/70 block font-semibold mt-2">ES LO QUE YA ESTÁS</span>
+            <span className="text-primary block font-black mt-2">ACTIVANDO.</span>
+          </h1>
+        </div>
+
+        {/* Logo circular de Marisol Ancestral Token */}
+        <div className="relative w-48 h-48 flex items-center justify-center my-4">
+          {/* Círculo externo dorado */}
+          <div className="absolute inset-0 border-4 border-primary rounded-full animate-pulse" />
+          <div className="absolute inset-3 border-2 border-primary/50 rounded-full" />
+          
+          {/* Contenedor del logo */}
+          <div className="relative w-40 h-40 flex items-center justify-center">
+            <Image
+              src="/marisol-character.jpg"
+              alt="Marisol Ancestral Token"
+              width={160}
+              height={160}
+              className="w-full h-full object-cover rounded-full shadow-xl shadow-primary/40"
             />
           </div>
-        </div>
-
-        {/* Main Text */}
-        <div className="text-center space-y-4 mt-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-pretty leading-tight">
-            <span className="text-primary block">NO ES TU FUTURO,</span>
-            <span className="text-foreground/80 block">ES LO QUE YA ESTÁS</span>
-            <span className="text-primary block">ACTIVANDO.</span>
-          </h1>
-          <p className="text-sm text-foreground/60 mt-6">
-            Marisol Ancestral Token - Poder ancestral activado
-          </p>
-        </div>
-      </div>
-
-      {/* Token Info Cards */}
-      <div className="grid grid-cols-2 gap-4 mt-8">
-        <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-5 hover:bg-card/60 transition-all hover:border-primary/50">
-          <div className="space-y-3">
-            <p className="text-xs uppercase text-foreground/50 tracking-wider">Token</p>
-            <p className="text-base font-bold text-primary">Marisol Ancestral</p>
-            <p className="text-xs text-foreground/40">MAR-AP</p>
+          
+          {/* Texto circular (simulado con posición absoluta) */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <svg viewBox="0 0 200 200" className="w-full h-full absolute">
+              <defs>
+                <path
+                  id="circlePath"
+                  d="M 100, 100 m -80, 0 a 80,80 0 1,1 160,0 a 80,80 0 1,1 -160,0"
+                  fill="none"
+                />
+              </defs>
+              <text fontSize="14" fill={''} fontWeight="bold" letterSpacing="2">
+                <textPath href="#circlePath" startOffset="50%" textAnchor="middle" fill="rgb(212, 175, 55)">
+                  MARISOL ANCESTRAL TOKEN
+                </textPath>
+              </text>
+            </svg>
           </div>
-        </Card>
-        <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-5 hover:bg-card/60 transition-all hover:border-primary/50">
-          <div className="space-y-3">
-            <p className="text-xs uppercase text-foreground/50 tracking-wider">Blockchain</p>
-            <p className="text-base font-bold text-primary">Worldcoin</p>
-            <p className="text-xs text-foreground/40">WLD Chain</p>
-          </div>
-        </Card>
-      </div>
-
-      {/* CTA Buttons */}
-      <div className="space-y-3 mt-8">
-        <Button
-          onClick={() => onNavigate('dashboard')}
-          className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 rounded-lg transition-all hover:shadow-lg hover:shadow-primary/30"
-        >
-          Ver Mi Balance
-        </Button>
-        <Button
-          onClick={() => onNavigate('worldcoin')}
-          className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary/50 font-semibold py-6 rounded-lg transition-all"
-        >
-          Conectar Worldcoin
-        </Button>
-      </div>
-
-      {/* Footer Info */}
-      <Card className="bg-gradient-to-r from-primary/10 to-primary/5 backdrop-blur-xl border border-primary/20 p-6 text-center">
-        <div className="space-y-3">
-          <p className="text-sm text-foreground/70 leading-relaxed">
-            Una moneda de poder ancestral activada a través de Worldcoin. Tu futuro ya está siendo creado.
-          </p>
-          <p className="text-2xl font-bold text-primary">✨ Activa tu Magia ✨</p>
-          <p className="text-xs text-foreground/50 pt-2">@MARISOL ANCESTRAL BOT</p>
         </div>
-      </Card>
+
+        {/* Username y bola de cristal */}
+        <div className="text-center space-y-4">
+          <p className="text-lg md:text-xl font-bold text-primary">
+            @MARISOL ANCESTRAL BOT 🔮
+          </p>
+          <p className="text-xs text-foreground/50">Poder ancestral activado</p>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="space-y-3 w-full mt-6">
+          <Button
+            onClick={() => onNavigate('dashboard')}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-6 rounded-lg transition-all hover:shadow-lg hover:shadow-primary/50 text-base"
+          >
+            Ver Mi Balance
+          </Button>
+          <Button
+            onClick={() => onNavigate('mining')}
+            className="w-full bg-primary/20 hover:bg-primary/30 text-primary border-2 border-primary font-bold py-6 rounded-lg transition-all text-base"
+          >
+            Comenzar a Minar
+          </Button>
+          <Button
+            onClick={() => onNavigate('worldcoin')}
+            className="w-full bg-transparent hover:bg-primary/10 text-primary border border-primary/50 font-semibold py-6 rounded-lg transition-all text-base"
+          >
+            Verificar Worldcoin
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
