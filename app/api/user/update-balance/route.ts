@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-server';
+
+const supabase = createClient();
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,12 +11,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Validate balance is not negative
     if (balance < 0) {
       return NextResponse.json({ error: 'Invalid balance' }, { status: 400 });
     }
 
-    // Update user balance
+    const supabase = await createClient();
+
     const { data, error } = await supabase
       .from('users')
       .update({ balance })

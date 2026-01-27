@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing telegramId' }, { status: 400 });
     }
 
-    // Try to fetch from Supabase
+    const supabase = await createClient();
+
     const { data, error } = await supabase
       .from('users')
       .select('*')
@@ -21,16 +22,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Return user data
     return NextResponse.json({
       id: data.id,
       telegramId: data.telegram_id,
       username: data.username,
-      balance: data.balance || 0,
-      miningBalance: data.mining_balance || 0,
+      balance: parseFloat(data.balance) || 0,
+      miningBalance: parseFloat(data.mining_balance) || 0,
       worldcoinVerified: data.worldcoin_verified || false,
       worldcoinAddress: data.worldcoin_address,
-      miningPower: data.mining_power || 1,
+      miningPower: parseFloat(data.mining_power) || 1,
       miningLevel: data.mining_level || 1,
       createdAt: data.created_at,
     });

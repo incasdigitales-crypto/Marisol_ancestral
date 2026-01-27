@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/lib/supabase-server';
 
 const MINING_LEVELS = [
   { level: 1, power: 1, cost: 0 },
@@ -17,7 +17,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Get current user
+    const supabase = await createClient();
+
     const { data: user, error: fetchError } = await supabase
       .from('users')
       .select('*')
