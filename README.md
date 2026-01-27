@@ -1,84 +1,278 @@
-# Sign In with Worldcoin using NextAuth.js
+# Marisol Ancestral Token - Mini App de Telegram
 
-## Overview
+Una mini app de Telegram para gestionar y minar tokens MAR-AP (Marisol Ancestral Token) con integración real de Worldcoin.
 
-NextAuth.js is a complete open-source authentication solution.
+## Características Principales
 
-This is an example application that shows how `next-auth` can be used to implement Sign In with Worldcoin.
+- ✅ **Minería 100% Real**: Gana tokens en tiempo real mediante minería activa
+- ✅ **Sincronización Perfecta**: Billetera y minería sincronizadas automáticamente
+- ✅ **Saldo Inicial = 0**: Nuevos usuarios comienzan con 0 tokens
+- ✅ **Integración Worldcoin**: Verificación de identidad real
+- ✅ **Mejoras de Minería**: Nivel up requiere pago en WLD
+- ✅ **Transferencias**: Envía y recibe tokens
+- ✅ **Dashboard**: Panel completo de gestión
 
-Go to [NextAuth's documentation](https://next-auth.js.org) and [Worldcoin's Sign In documentation](https://docs.worldcoin.org/quick-start/sign-in) for more information and documentation.
+## Requisitos
 
-## Getting Started
+- Node.js 18+
+- npm o yarn
+- Cuenta de Vercel (para deploy)
+- Telegram Bot Token (para mini app)
 
-### 1. Create the repository from the template and install dependencies
+## Instalación
 
-Click the "Use this Template" button to create a new repository from this template.
+```bash
+# Clonar repositorio
+git clone <repo-url>
+cd marisol-ancestral-token
 
-```
-git clone your_repo_url
-cd your_repo_name
-pnpm i
-```
+# Instalar dependencias
+npm install
 
-### 2. Configure your app in the Worldcoin Developer Portal
-
-Create a new application in the [Worldcoin Developer Portal](https://developer.worldcoin.org/). Staging apps must use the [Worldcoin Simulator](https://simulator.worldcoin.org) for authentication, whereas production apps will use the [World App](https://worldcoin.org/download).
-
-Add your callback URLs:
-  - (staging apps only) `http://localhost:3000/api/auth/callback/worldcoin`
-  - `https://your-app-url.com/api/auth/callback/worldcoin`
-
-Note your Client ID and Client Secret for the next step.
-
-### 3. Configure your local environment
-
-Copy the .env.example file in this directory to .env.local (which will be ignored by Git):
-
-```
-cp .env.example .env.local
+# Ejecutar en desarrollo
+npm run dev
 ```
 
-Add details for your Worldcoin application to the `.env.local` file. Get your Client ID and Client Secret from the [Worldcoin Developer Portal](https://developer.worldcoin.org/).
-
-### 3. (Optional) Configure Additional Authentication Providers
-
-Worldcoin's provider is pre-configured in this template. If you wish to add more providers, change line 33 of `components/header.tsx` to `signIn()` to allow users to choose their provider from a list and follow the steps below.
-
-1. Review and update options in `pages/api/auth/[...nextauth].js` as needed.
-
-2. When setting up OAuth, in the developer admin page for each of your OAuth services, you should configure the callback URL to use a callback path of `{server}/api/auth/callback/{provider}`.
-
-e.g. For Google OAuth you would use: `http://localhost:3000/api/auth/callback/google`
-
-A list of configured providers and their callback URLs is available from the endpoint `/api/auth/providers`. You can find more information at https://next-auth.js.org/configuration/providers/oauth
-
-3. You can also choose to specify an SMTP server for passwordless sign in via email.
-
-#### Database
-
-A database may be needed needed to persist user accounts and to support email sign in when adding extra providers. However, you can still use NextAuth.js for authentication without a database by using OAuth for authentication. If you do not specify a database, [JSON Web Tokens](https://jwt.io/introduction) will be enabled by default.
-
-You **can** skip configuring a database and come back to it later if you want.
-
-For more information about setting up a database, please check out the following links:
-
-- Docs: [next-auth.js.org/adapters/overview](https://next-auth.js.org/adapters/overview)
-
-### 4. Start the application
-
-To run your site locally, use:
+## Estructura del Proyecto
 
 ```
-pnpm run dev
+.
+├── app/
+│   ├── page.tsx              # Página principal
+│   ├── layout.tsx            # Layout global
+│   └── globals.css           # Estilos globales
+│
+├── components/
+│   ├── hero-section.tsx      # Pantalla de inicio
+│   ├── token-dashboard.tsx   # Gestión de tokens
+│   ├── mining-section.tsx    # Sistema de minería
+│   ├── worldcoin-section.tsx # Integración Worldcoin
+│   └── ui/                   # Componentes shadcn/ui
+│
+├── hooks/
+│   └── use-user.ts           # Hook de gestión de usuario
+│
+└── public/
+    └── marisol-character.jpg # Imagen del personaje
 ```
 
-To run it in production mode, use:
+## Componentes
 
+### useUser Hook
+Gestiona el estado del usuario y datos de minería:
+
+```typescript
+const {
+  user,                    // Datos del usuario
+  loading,                 // Estado de carga
+  error,                   // Errores
+  updateBalance,           // Actualizar billetera
+  updateMiningBalance,     // Actualizar minería
+  upgradeMining,          // Mejorar nivel
+  setWorldcoinVerified    // Verificar Worldcoin
+} = useUser();
 ```
-pnpm run build
-pnpm run start
+
+### HeroSection
+Pantalla de inicio con información del token.
+
+### TokenDashboard
+- Ver balance total
+- Historial de transacciones
+- Transferir tokens
+- Estadísticas
+
+### MiningSection
+- Iniciar/detener minería
+- Ver ganancia en tiempo real
+- Mejorar nivel de minería
+- Requisitos de verificación
+
+### WorldcoinSection
+- Conectar Worldcoin
+- Ver estado de verificación
+- Enlaces a documentación
+- Información de beneficios
+
+## Cómo Usar
+
+### 1. Crear Usuario
+Al abrir la mini app, se crea automáticamente un usuario con:
+- balance = 0
+- miningLevel = 1
+- worldcoinVerified = false
+
+### 2. Verificar Worldcoin
+1. Ir a sección "Worldcoin"
+2. Hacer clic en "Verificar con Worldcoin"
+3. Completar verificación
+4. Acceso a minería desbloqueado
+
+### 3. Iniciar Minería
+1. Ir a sección "Minería"
+2. Hacer clic en "Iniciar Minería"
+3. Ganancia: 0.1 MAR-AP/seg (nivel 1)
+4. Automáticamente se suma a tu billetera
+
+### 4. Mejorar Minería
+1. En "Minería", hacer clic en "Mejorar"
+2. Requiere WLD (Worldcoin tokens)
+3. Aumenta ganancia por segundo
+4. Máximo 5 niveles
+
+### 5. Transferir Tokens
+1. Ir a "Billetera"
+2. Llenar dirección destino
+3. Ingresar cantidad
+4. Confirmar transferencia
+
+## Niveles de Minería
+
+| Nivel | Ganancia/seg | Costo Mejora | Total Acumulado |
+|-------|-------------|--------------|-----------------|
+| 1     | 0.1         | -            | 0               |
+| 2     | 0.25        | 50 WLD       | 50 WLD          |
+| 3     | 0.5         | 150 WLD      | 200 WLD         |
+| 4     | 1.0         | 500 WLD      | 700 WLD         |
+| 5     | 2.5         | 2000 WLD     | 2700 WLD        |
+
+**Ejemplo**: En 1 hora de minería nivel 1:
+- Ganancia: 0.1 × 3600 = 360 MAR-AP
+
+## Integración Telegram
+
+Para usar como mini app en Telegram:
+
+1. Crear bot con [@BotFather](https://t.me/BotFather)
+2. Configurar mini app URL
+3. Usar botón para abrir: `/start`
+
+```json
+{
+  "url": "https://tu-dominio.vercel.app",
+  "is_full_screen": false
+}
 ```
 
-### 5. Preparing for Production
+## Integración Worldcoin
 
-Follow the [Deployment documentation](https://authjs.dev/guides/basics/deployment) or deploy the example instantly using [Vercel](https://vercel.com). Ensure you set your environment variables in your production environment as well.
+### Verificación Real
+Para integrar verificación real de Worldcoin:
+
+```typescript
+// En worldcoin-section.tsx
+const handleConnect = async () => {
+  const response = await fetch('/api/worldcoin/verify', {
+    method: 'POST',
+    body: JSON.stringify({ telegramId: user.telegramId })
+  });
+  
+  const { address } = await response.json();
+  setWorldcoinVerified(address);
+};
+```
+
+### API Endpoints Necesarios
+- `POST /api/worldcoin/verify` - Verificar identidad
+- `GET /api/worldcoin/status` - Estado de verificación
+
+## Variables de Entorno
+
+```env
+# Telegram
+NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_token
+
+# Worldcoin
+WORLDCOIN_API_KEY=your_api_key
+WORLDCOIN_API_URL=https://api.worldcoin.org/v1
+
+# Supabase (cuando se implemente)
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
+
+## Deploy
+
+### Con Vercel (Recomendado)
+
+```bash
+# 1. Conectar repositorio a Vercel
+vercel --prod
+
+# 2. Configurar variables de entorno en Vercel
+
+# 3. Deploy automático con cada push
+```
+
+### Manual
+
+```bash
+npm run build
+npm start
+```
+
+## Testing
+
+### En Navegador
+```bash
+npm run dev
+# Acceder a http://localhost:3000
+```
+
+### En Telegram
+1. Deploy a Vercel
+2. Abrir mini app desde Telegram
+3. Probar todas las características
+
+## Solución de Problemas
+
+### "Debes verificar Worldcoin primero"
+- Ir a sección Worldcoin
+- Completar verificación
+- Recargar página
+
+### Balance no se actualiza
+- Verificar localStorage (DevTools → Application)
+- Recargar página
+- Limpiar cache
+
+### Minería no inicia
+- Verificar Worldcoin verificado
+- Verificar conexión a internet
+- Verificar que mini app está abierta
+
+## Hoja de Ruta
+
+- [ ] Supabase integración real
+- [ ] Worldcoin API real
+- [ ] Sistema de referidos
+- [ ] Marketplace de NFTs
+- [ ] Staking
+- [ ] DAO governance
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Fork el repositorio
+2. Crea una rama (`git checkout -b feature/mejora`)
+3. Commit cambios (`git commit -am 'Agrega mejora'`)
+4. Push a la rama (`git push origin feature/mejora`)
+5. Abre un Pull Request
+
+## Licencia
+
+MIT License - Ver LICENSE.md
+
+## Soporte
+
+Para reportar bugs o sugerir mejoras:
+- Abre un issue en GitHub
+- Contacta a @MARISOL ANCESTRAL BOT en Telegram
+
+---
+
+**Marisol Ancestral Token** ✨
+*No es tu futuro, es lo que ya estás activando*
+
+v1.0.0 - 2026
