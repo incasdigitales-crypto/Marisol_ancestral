@@ -6,12 +6,13 @@ import HeroSection from '@/components/hero-section';
 import TokenDashboard from '@/components/token-dashboard';
 import WorldcoinSection from '@/components/worldcoin-section';
 import MiningSection from '@/components/mining-section';
+import SavingsSection from '@/components/savings-section';
 
-type View = 'hero' | 'dashboard' | 'mining' | 'worldcoin';
+type View = 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings';
 
 export default function Home() {
   const [currentView, setCurrentView] = useState<View>('hero');
-  const { user, loading, updateBalance, updateMiningBalance, upgradeMining, setWorldcoinVerified } = useUser();
+  const { user, loading, updateBalance, updateMiningBalance, upgradeMining, setWorldcoinVerified, depositToSavings, claimSavingsInterest } = useUser();
 
   useEffect(() => {
     if (typeof window !== 'undefined' && (window as any).Telegram) {
@@ -89,14 +90,21 @@ export default function Home() {
             onVerify={setWorldcoinVerified}
           />
         )}
+        {currentView === 'savings' && (
+          <SavingsSection
+            user={user}
+            onSavingsDeposit={depositToSavings}
+            onClaimDailyInterest={claimSavingsInterest}
+          />
+        )}
       </main>
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-primary/10">
-        <div className="flex items-center justify-around px-4 py-3 max-w-md mx-auto w-full">
+        <div className="flex items-center justify-around px-2 py-3 max-w-md mx-auto w-full overflow-x-auto">
           <button
             onClick={() => setCurrentView('hero')}
-            className={`flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
               currentView === 'hero'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
@@ -107,7 +115,7 @@ export default function Home() {
           </button>
           <button
             onClick={() => setCurrentView('dashboard')}
-            className={`flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
               currentView === 'dashboard'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
@@ -117,8 +125,19 @@ export default function Home() {
             <span className="text-xs font-medium">Billetera</span>
           </button>
           <button
+            onClick={() => setCurrentView('savings')}
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+              currentView === 'savings'
+                ? 'text-primary bg-primary/15 border border-primary/30'
+                : 'text-foreground/60 hover:text-foreground'
+            }`}
+          >
+            <span className="text-lg">🏦</span>
+            <span className="text-xs font-medium">Bodega</span>
+          </button>
+          <button
             onClick={() => setCurrentView('mining')}
-            className={`flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
               currentView === 'mining'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
@@ -129,7 +148,7 @@ export default function Home() {
           </button>
           <button
             onClick={() => setCurrentView('worldcoin')}
-            className={`flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
               currentView === 'worldcoin'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'

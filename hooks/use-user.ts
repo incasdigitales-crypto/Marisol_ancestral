@@ -8,12 +8,14 @@ export interface UserData {
   username: string;
   balance: number;
   miningBalance: number;
+  savingsBalance: number;
   worldcoinVerified: boolean;
   worldcoinAddress?: string;
   miningPower: number;
   miningLevel: number;
   createdAt: string;
   lastMiningUpdate?: string;
+  lastSavingsUpdate?: string;
 }
 
 export function useUser() {
@@ -75,6 +77,7 @@ export function useUser() {
                 username,
                 balance: 0,
                 miningBalance: 0,
+                savingsBalance: 0,
                 worldcoinVerified: false,
                 miningPower: 1,
                 miningLevel: 1,
@@ -258,6 +261,98 @@ export function useUser() {
     [user]
   );
 
+  // Deposit to savings
+  const depositToSavings = useCallback(
+    async (amount: number) => {
+      if (!user || user.balance < amount) {
+        setError('Saldo insuficiente');
+        return;
+      }
+
+      const newBalance = user.balance - amount;
+      const newSavings = user.savingsBalance + amount;
+
+      // Optimistic update
+      setUser(prev =>
+        prev
+          ? {
+              ...prev,
+              balance: newBalance,
+              savingsBalance: newSavings,
+              lastSavingsUpdate: new Date().toISOString(),
+            }
+          : null
+      );
+
+      // Sync to backend
+      try {
+        await fetch('/api/user/update-savings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegramId: user.telegramId,
+            savingsDeposit: amount,
+          }),
+        });
+      } catch (err) {
+        console.log('[v0] Savings deposit failed, using local state');
+        localStorage.setItem(
+          `user_${user.telegramId}`,
+          JSON.stringify({ ...user, balance: newBalance, savingsBalance: newSavings })
+        );
+      }
+    },
+    [user]
+  );
+
+  // Claim daily savings interest
+  const claimSavingsInterest = useCallback(
+    async () => {
+      if (!user) return;
+
+      const lastUpdate = user.lastSavingsUpdate ? new Date(user.lastSavingsUpdate) : new Date(0);
+      const now = new Date();
+      const diffHours = (now.getTime() - lastUpdate.getTime()) / (1000 * 60 * 60);
+
+      if (diffHours < 24) {
+        setError(`Debes esperar ${(24 - diffHours).toFixed(1)} horas para reclamar interés`);
+        return;
+      }
+
+      const interestAmount = 1;
+      const newBalance = user.balance + interestAmount;
+
+      // Optimistic update
+      setUser(prev =>
+        prev
+          ? {
+              ...prev,
+              balance: newBalance,
+              lastSavingsUpdate: new Date().toISOString(),
+            }
+          : null
+      );
+
+      // Sync to backend
+      try {
+        await fetch('/api/user/claim-savings-interest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            telegramId: user.telegramId,
+          }),
+        });
+      } catch (err) {
+        console.log('[v0] Claim interest failed, using local state');
+        localStorage.setItem(
+          `user_${user.telegramId}`,
+          JSON.stringify({ ...user, balance: newBalance, lastSavingsUpdate: new Date().toISOString() })
+        );
+      }
+    },
+    [user]
+  );
+
   return {
     user,
     loading,
@@ -266,6 +361,8 @@ export function useUser() {
     updateMiningBalance,
     upgradeMining,
     setWorldcoinVerified,
+    depositToSavings,
+    claimSavingsInterest,
     syncUser,
   };
 }
