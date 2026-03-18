@@ -7,8 +7,13 @@ import TokenDashboard from '@/components/token-dashboard';
 import WorldcoinSection from '@/components/worldcoin-section';
 import MiningSection from '@/components/mining-section';
 import SavingsSection from '@/components/savings-section';
+import { MiningLevelsSection } from '@/components/mining-levels-section';
+import { SavingsLevelsSection } from '@/components/savings-levels-section';
+import { ExchangeSection } from '@/components/exchange-section';
+import { PriceChartSection } from '@/components/price-chart-section';
+import { AIAssistantSection } from '@/components/ai-assistant-section';
 
-type View = 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings';
+type View = 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings' | 'exchange' | 'prices' | 'mining-levels' | 'savings-levels';
 
 export default function Home() {
   const [currentView, setCurrentView] = useState<View>('hero');
@@ -97,65 +102,139 @@ export default function Home() {
             onClaimDailyInterest={claimSavingsInterest}
           />
         )}
+        {currentView === 'mining-levels' && (
+          <div className="px-4 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4 mt-4">Etapas de Minería Premium</h2>
+            <MiningLevelsSection
+              userBalance={user?.balance || 0}
+              currentLevel="normal"
+              onUpgrade={async (levelId, cost) => {
+                console.log('[v0] Upgrading mining level:', levelId, 'Cost:', cost);
+                updateBalance(-cost);
+              }}
+            />
+          </div>
+        )}
+        {currentView === 'savings-levels' && (
+          <div className="px-4 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4 mt-4">Etapas de Bodega</h2>
+            <SavingsLevelsSection
+              savingsBalance={user?.savingsBalance || 0}
+              currentLevel="basica"
+              onDeposit={async (amount, levelId) => {
+                console.log('[v0] Depositing to savings:', amount, 'Level:', levelId);
+                depositToSavings(amount);
+              }}
+              onClaim={claimSavingsInterest}
+            />
+          </div>
+        )}
+        {currentView === 'exchange' && (
+          <div className="px-4 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4 mt-4">Cambio de Monedas</h2>
+            <ExchangeSection
+              worldcoinBalance={user?.balance || 0}
+              marissolBalance={user?.balance || 0}
+              onExchange={async (fromCurrency, amount, toCurrency) => {
+                console.log(`[v0] Exchanging ${amount} ${fromCurrency} to ${toCurrency}`);
+                updateBalance(-amount * 0.05); // Simular quema del 5%
+              }}
+            />
+          </div>
+        )}
+        {currentView === 'prices' && (
+          <div className="px-4 max-w-md mx-auto">
+            <h2 className="text-xl font-bold mb-4 mt-4">Gráfico de Precios</h2>
+            <PriceChartSection
+              currentPrice={0.0065}
+              change24h={12.5}
+            />
+          </div>
+        )}
       </main>
+
+      {/* AI Assistant */}
+      <AIAssistantSection />
 
       {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-t border-primary/10">
-        <div className="flex items-center justify-around px-2 py-3 max-w-md mx-auto w-full overflow-x-auto">
+        <div className="flex items-center justify-start px-2 py-3 max-w-md mx-auto w-full overflow-x-auto gap-1">
           <button
             onClick={() => setCurrentView('hero')}
-            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
               currentView === 'hero'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             <span className="text-lg">✨</span>
-            <span className="text-xs font-medium">Inicio</span>
+            <span className="font-medium">Inicio</span>
           </button>
           <button
             onClick={() => setCurrentView('dashboard')}
-            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
               currentView === 'dashboard'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             <span className="text-lg">💰</span>
-            <span className="text-xs font-medium">Billetera</span>
+            <span className="font-medium">Billetera</span>
           </button>
           <button
             onClick={() => setCurrentView('savings')}
-            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
               currentView === 'savings'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             <span className="text-lg">🏦</span>
-            <span className="text-xs font-medium">Bodega</span>
+            <span className="font-medium">Bodega</span>
           </button>
           <button
             onClick={() => setCurrentView('mining')}
-            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
               currentView === 'mining'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             <span className="text-lg">⛏️</span>
-            <span className="text-xs font-medium">Minería</span>
+            <span className="font-medium">Minería</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('exchange')}
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
+              currentView === 'exchange'
+                ? 'text-primary bg-primary/15 border border-primary/30'
+                : 'text-foreground/60 hover:text-foreground'
+            }`}
+          >
+            <span className="text-lg">🔄</span>
+            <span className="font-medium">Cambio</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('prices')}
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
+              currentView === 'prices'
+                ? 'text-primary bg-primary/15 border border-primary/30'
+                : 'text-foreground/60 hover:text-foreground'
+            }`}
+          >
+            <span className="text-lg">📊</span>
+            <span className="font-medium">Precios</span>
           </button>
           <button
             onClick={() => setCurrentView('worldcoin')}
-            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+            className={`flex flex-col items-center gap-1 px-2 py-2 rounded-lg transition-all duration-300 whitespace-nowrap text-xs ${
               currentView === 'worldcoin'
                 ? 'text-primary bg-primary/15 border border-primary/30'
                 : 'text-foreground/60 hover:text-foreground'
             }`}
           >
             <span className="text-lg">🌍</span>
-            <span className="text-xs font-medium">Worldcoin</span>
+            <span className="font-medium">Worldcoin</span>
           </button>
         </div>
       </nav>
