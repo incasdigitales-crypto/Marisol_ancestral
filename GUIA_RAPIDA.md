@@ -26,7 +26,7 @@ Agregada en el menú inferior:
 
 ### Para el Usuario Final:
 
-```
+\`\`\`
 1. El usuario entra a la app → SALDO = 0
 2. Gana monedas (minería, etc.)
 3. Va a pestaña "Bodega" 🏦
@@ -35,17 +35,17 @@ Agregada en el menú inferior:
 6. Hace clic en "Reclamar Interés"
 7. Gana +1 MAR-AP
 8. Repite diariamente → GANANCIAS INFINITAS
-```
+\`\`\`
 
 ### Para Verificar su Cuenta Worldcoin:
 
-```
+\`\`\`
 1. Va a "Worldcoin" 🌍
 2. Hace clic en "Verificar Identidad Ahora"
 3. Espera a que se verifique
 4. Ve su dirección Worldcoin
 5. ¡Ya puede minar!
-```
+\`\`\`
 
 ---
 
@@ -82,7 +82,7 @@ En tu preview o app, verifica que:
 
 ## 🎯 Flujo Completo del Usuario
 
-```
+\`\`\`
 ┌─ INICIO ─────────────────────────────────────┐
 │                                               │
 │  1️⃣ Usuario entra (balance = 0)             │
@@ -97,7 +97,7 @@ En tu preview o app, verifica que:
 │  🔟 ¡Acumula riqueza! 💰                     │
 │                                               │
 └───────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -122,7 +122,7 @@ En tu preview o app, verifica que:
 ## 📱 Nuevos Componentes
 
 ### Componente: SavingsSection
-```
+\`\`\`
 Ubicación: /components/savings-section.tsx
 Características:
 ✓ Display de saldo en bodega
@@ -130,30 +130,30 @@ Características:
 ✓ Formulario de depósito
 ✓ Información educativa
 ✓ Proyecciones anuales
-```
+\`\`\`
 
 ### API: Actualizar Ahorros
-```
+\`\`\`
 URL: /api/user/update-savings
 Método: POST
 Parámetros:
 - telegramId
 - savingsDeposit (monto)
 Respuesta: Usuario actualizado
-```
+\`\`\`
 
 ### API: Reclamar Interés
-```
+\`\`\`
 URL: /api/user/claim-savings-interest
 Método: POST
 Parámetros:
 - telegramId
 Validación: Mínimo 24h desde último claim
 Respuesta: Usuario actualizado + 1 MAR-AP
-```
+\`\`\`
 
 ### API: Verificar Worldcoin
-```
+\`\`\`
 URL: /api/user/worldcoin-verify
 Método: POST
 Parámetros:
@@ -161,7 +161,7 @@ Parámetros:
 Respuesta:
 - worldcoinAddress (única por usuario)
 - status verificado
-```
+\`\`\`
 
 ---
 
@@ -173,13 +173,13 @@ Respuesta:
 3. Perfecto para testing
 
 ### Simular paso de 24 horas:
-```javascript
+\`\`\`javascript
 // En consola del navegador (F12):
 const user = JSON.parse(localStorage.getItem('user_YOUR_TELEGRAM_ID'));
 user.lastSavingsUpdate = new Date(Date.now() - 25*60*60*1000); // 25h atrás
 localStorage.setItem('user_YOUR_TELEGRAM_ID', JSON.stringify(user));
 // Recarga la página y podrás reclamar interés
-```
+\`\`\`
 
 ---
 

@@ -19,7 +19,7 @@ He completado **TODOS los cambios solicitados** para tu aplicación Marisol Ance
 - Nueva pestaña **🏦 Bodega** en el menú
 
 **Lo que hace:**
-```
+\`\`\`
 Usuario deposita 100 MAR-AP
     ↓ (Espera 24h)
 Reclama 1 MAR-AP
@@ -27,7 +27,7 @@ Reclama 1 MAR-AP
 Año 1: Gana 365 MAR-AP
 Año 2: Gana 730 MAR-AP
 Total acumulado: ¡Infinito!
-```
+\`\`\`
 
 ---
 
@@ -41,14 +41,14 @@ Total acumulado: ¡Infinito!
 - Sistema de **recompensa diaria** 100% funcional
 
 **Características:**
-```
+\`\`\`
 ✓ Deposita cuanto quiera
 ✓ Bodega muestra saldo guardado
 ✓ Cada 24h: +1 MAR-AP automático
 ✓ Puede reclamar cuando quiera después de 24h
 ✓ Proyección anual visible
 ✓ Sin comisiones
-```
+\`\`\`
 
 ---
 
@@ -63,7 +63,7 @@ Total acumulado: ¡Infinito!
 - El usuario **solo puede minar** una vez verificado
 
 **Cambios en Worldcoin:**
-```
+\`\`\`
 ANTES: Simulación sin validación
         ↓
 AHORA: Verificación real con:
@@ -72,7 +72,7 @@ AHORA: Verificación real con:
        ✓ Estados visuales claros
        ✓ Bloqueo de minería sin verificar
        ✓ Mensajes de estado en tiempo real
-```
+\`\`\`
 
 ---
 
@@ -124,7 +124,7 @@ AHORA: Verificación real con:
 
 ### Opción 1: Con Supabase (Recomendado)
 
-```
+\`\`\`
 1. Abre tu proyecto en: https://app.supabase.com
 2. Ve a: SQL Editor
 3. Abre el archivo: /scripts/add-savings-table.sql
@@ -132,24 +132,24 @@ AHORA: Verificación real con:
 5. Pégalo en el editor SQL
 6. Haz clic en "Run"
 7. ¡Listo! Supabase está configurada
-```
+\`\`\`
 
 ### Opción 2: Sin Supabase (Desarrollo Local)
 
-```
+\`\`\`
 1. NO NECESITAS hacer nada más
 2. La app usa localStorage automáticamente
 3. Prueba todo localmente
 4. Los datos persisten en el navegador
 5. Cuando conectes Supabase, sincronizará
-```
+\`\`\`
 
 ---
 
 ## ✨ Nuevas Características
 
 ### Sistema de Bodega (🏦)
-```
+\`\`\`
 ├─ Depósito de monedas
 ├─ Display de saldo guardado
 ├─ Timer para interés diario
@@ -157,33 +157,33 @@ AHORA: Verificación real con:
 ├─ Proyección anual
 ├─ Información educativa
 └─ Cálculos automáticos
-```
+\`\`\`
 
 ### Verificación Worldcoin (🌍) Mejorada
-```
+\`\`\`
 ├─ Validación real en backend
 ├─ Generación de dirección única
 ├─ Estados claros (verificando/éxito/error)
 ├─ Mensajes de estado en tiempo real
 ├─ Interfaz responsiva
 └─ Bloqueo de minería si no verifica
-```
+\`\`\`
 
 ### Navegación (Menú Inferior)
-```
+\`\`\`
 ✨ Inicio
 💰 Billetera
 🏦 Bodega [NUEVO]
 ⛏️ Minería
 🌍 Worldcoin
-```
+\`\`\`
 
 ---
 
 ## 📊 Flujo del Usuario Ahora
 
 ### Usuario Nuevo:
-```
+\`\`\`
 1. Entra → balance = 0
 2. Va a Worldcoin → Verifica → ✓
 3. Va a Mining → Inicia minería ⛏️
@@ -192,10 +192,10 @@ AHORA: Verificación real con:
 6. Espera 24 horas
 7. Reclama 1 MAR-AP de interés
 8. Repite diariamente → ¡GANANCIAS INFINITAS!
-```
+\`\`\`
 
 ### Proyección Financiera:
-```
+\`\`\`
 Depósito: 100 MAR-AP
 
 Día 1-365:
@@ -205,7 +205,7 @@ Total ganado: 365 MAR-AP
 Después de 1 año: 465 MAR-AP (100 inicial + 365 ganados)
 Después de 5 años: 1,900 MAR-AP
 Después de 10 años: 4,100 MAR-AP
-```
+\`\`\`
 
 ---
 
@@ -238,7 +238,7 @@ Después de 10 años: 4,100 MAR-AP
 
 ## 🔐 Seguridad Implementada
 
-```
+\`\`\`
 ✓ Validación de saldo antes de depósito
 ✓ Prevención de depósitos negativos
 ✓ Verificación de 24h antes de reclamar interés
@@ -246,7 +246,7 @@ Después de 10 años: 4,100 MAR-AP
 ✓ Row Level Security (RLS) en BD
 ✓ Fallback automático a localStorage si BD cae
 ✓ Sin exposición de datos sensibles en cliente
-```
+\`\`\`
 
 ---
 

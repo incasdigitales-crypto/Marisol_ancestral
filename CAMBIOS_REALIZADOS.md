@@ -42,7 +42,7 @@
 
 ### Nuevos Archivos Creados:
 
-```
+\`\`\`
 /components/savings-section.tsx (232 líneas)
 ├── Componente cliente para gestionar ahorros
 ├── Interfaz de depósito
@@ -73,11 +73,11 @@
 
 /CAMBIOS_REALIZADOS.md (Este archivo)
 └── Resumen detallado de todos los cambios
-```
+\`\`\`
 
 ### Archivos Modificados:
 
-```
+\`\`\`
 /hooks/use-user.ts
 ├── Agregados campos: savingsBalance, lastSavingsUpdate
 ├── Nuevo método: depositToSavings(amount)
@@ -98,25 +98,25 @@
 ├── Reemplazado handleConnect con lógica real
 ├── Mejorada interfaz de verificación
 └── Agregados estados de error y carga
-```
+\`\`\`
 
 ### Archivo SQL:
 
-```
+\`\`\`
 /scripts/add-savings-table.sql
 ├── ALTER TABLE users: agrega savings_balance y last_savings_claim
 ├── CREATE TABLE savings_logs: registra todas las transacciones
 ├── CREATE INDEX: índices para performance
 ├── ALTER TABLE savings_logs ENABLE RLS: seguridad
 └── CREATE POLICY: políticas de RLS para datos
-```
+\`\`\`
 
 ---
 
 ## 🔄 Flujo del Sistema
 
 ### Sistema de Ahorros:
-```
+\`\`\`
 Usuario Inicia Sesión (balance = 0)
     ↓
 Gana monedas (minería/otros)
@@ -132,10 +132,10 @@ Reclama interés (1 MAR-AP)
 Repite diariamente
     ↓
 ¡Ganancias pasivas indefinidas!
-```
+\`\`\`
 
 ### Sistema de Verificación Worldcoin:
-```
+\`\`\`
 Usuario va a Worldcoin
     ↓
 Hace clic en "Verificar Identidad"
@@ -149,7 +149,7 @@ Guarda estado verificado
 Muestra confirmación
     ↓
 Usuario puede minar
-```
+\`\`\`
 
 ---
 

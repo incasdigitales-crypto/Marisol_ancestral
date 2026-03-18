@@ -94,7 +94,7 @@ Dependiendo de lo que necesites, aquí está el orden recomendado:
 
 ## 📂 Estructura de Archivos Nuevos
 
-```
+\`\`\`
 /
 ├── RESUMEN_IMPLEMENTACION.md       ← EMPIEZA AQUÍ (5 min)
 ├── GUIA_RAPIDA.md                  ← Luego esto (10 min)
@@ -123,50 +123,50 @@ Dependiendo de lo que necesites, aquí está el orden recomendado:
 │
 └── scripts/
     └── add-savings-table.sql       ← Actualizado: +tablas BD
-```
+\`\`\`
 
 ---
 
 ## 🎯 Por Caso de Uso
 
 ### "Solo quiero saber qué cambió"
-```
+\`\`\`
 Leer en orden:
 1. RESUMEN_IMPLEMENTACION.md (5 min)
 2. CAMBIOS_REALIZADOS.md (20 min)
-```
+\`\`\`
 
 ### "Quiero configurar todo ahora"
-```
+\`\`\`
 Leer en orden:
 1. RESUMEN_IMPLEMENTACION.md (5 min)
 2. SETUP_INSTRUCTIONS.md (10 min)
 3. Ejecuta el script SQL
-```
+\`\`\`
 
 ### "Quiero probarlo antes de producción"
-```
+\`\`\`
 Leer en orden:
 1. GUIA_RAPIDA.md (10 min)
 2. TEST_CASES.md (leer los relevantes)
 3. Ejecuta los tests manualmente
-```
+\`\`\`
 
 ### "Estoy listo para desplegar"
-```
+\`\`\`
 Leer en orden:
 1. SETUP_INSTRUCTIONS.md (10 min) - si no lo hiciste
 2. DEPLOYMENT_GUIDE.md (20 min)
 3. TEST_CASES.md (ejecuta pre-deployment checks)
 4. Despliega a Vercel
-```
+\`\`\`
 
 ### "Necesito referencia técnica"
-```
+\`\`\`
 Leer:
 1. CAMBIOS_REALIZADOS.md (20 min)
 2. Revisa el código comentado en /components y /app/api
-```
+\`\`\`
 
 ---
 
@@ -222,17 +222,17 @@ Leer:
 ## 🎓 Niveles de Lectura
 
 ### Nivel 1: Usuario/Producto Manager
-```
+\`\`\`
 Lee:
 - RESUMEN_IMPLEMENTACION.md (5 min)
 - GUIA_RAPIDA.md (10 min)
 
 Tiempo total: 15 minutos
 Entenderás: Qué hace la app y cómo usarla
-```
+\`\`\`
 
 ### Nivel 2: DevOps/Administrador
-```
+\`\`\`
 Lee:
 - RESUMEN_IMPLEMENTACION.md (5 min)
 - SETUP_INSTRUCTIONS.md (10 min)
@@ -240,10 +240,10 @@ Lee:
 
 Tiempo total: 35 minutos
 Entenderás: Cómo configurar y desplegar
-```
+\`\`\`
 
 ### Nivel 3: Desarrollador
-```
+\`\`\`
 Lee TODO:
 - RESUMEN_IMPLEMENTACION.md (5 min)
 - GUIA_RAPIDA.md (10 min)
@@ -253,10 +253,10 @@ Lee TODO:
 
 Tiempo total: 1.5 horas
 Entenderás: Cómo todo funciona y cómo extenderlo
-```
+\`\`\`
 
 ### Nivel 4: QA/Tester
-```
+\`\`\`
 Lee:
 - GUIA_RAPIDA.md (10 min)
 - TEST_CASES.md (30 min)
@@ -264,7 +264,7 @@ Lee:
 
 Tiempo total: 1 hora
 Entenderás: Cómo validar cada función
-```
+\`\`\`
 
 ---
 

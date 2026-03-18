@@ -1,7 +1,7 @@
 -- Agregar columna de saldo de ahorros a la tabla de usuarios
 ALTER TABLE public.users 
 ADD COLUMN IF NOT EXISTS savings_balance DECIMAL(18, 2) DEFAULT 0,
-ADD COLUMN IF NOT EXISTS last_savings_claim TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now());
+ADD COLUMN IF NOT EXISTS last_savings_update TIMESTAMP WITH TIME ZONE;
 
 -- Crear tabla de registros de ahorros
 CREATE TABLE IF NOT EXISTS public.savings_logs (
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.savings_logs (
   user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   deposit_amount DECIMAL(18, 2) NOT NULL,
   interest_earned DECIMAL(18, 2) DEFAULT 0,
-  daily_interest_rate DECIMAL(5, 4) DEFAULT 0.01, -- 1% diario
+  daily_interest_rate DECIMAL(5, 4) DEFAULT 1, -- 1 MAR-AP diario
   claimed_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );

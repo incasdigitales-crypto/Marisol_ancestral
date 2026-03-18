@@ -2,18 +2,18 @@
 
 ## ¿Qué Solicitaste?
 
-```
+\`\`\`
 ❌ Falta sistema de bodega/ahorro
 ❌ No hay interés diario
 ❌ Verificación Worldcoin no funciona
 ❌ Falta pestaña de bodega en navegación
-```
+\`\`\`
 
 ---
 
 ## ¿Qué Recibiste?
 
-```
+\`\`\`
 ✅ SISTEMA COMPLETO DE BODEGA
    ├── Depósitos ilimitados
    ├── Interés 1 MAR-AP/día
@@ -40,13 +40,13 @@
    ├── Casos de prueba
    ├── Instrucciones de despliegue
    └── Índice de documentación
-```
+\`\`\`
 
 ---
 
 ## 📊 Estadísticas de Implementación
 
-```
+\`\`\`
 ┌─────────────────────────────────────┐
 │   CÓDIGO AGREGADO / MODIFICADO      │
 ├─────────────────────────────────────┤
@@ -80,7 +80,7 @@
 │ Total Líneas Modificadas:   ~100   │
 │                                     │
 └─────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -88,7 +88,7 @@
 
 ### ANTES
 
-```
+\`\`\`
 ┌─────────────────────────┐
 │    MARISOL APP (OLD)    │
 ├─────────────────────────┤
@@ -103,11 +103,11 @@
 │  ❌ WORLDCOIN FAKE      │
 │                         │
 └─────────────────────────┘
-```
+\`\`\`
 
 ### DESPUÉS
 
-```
+\`\`\`
 ┌──────────────────────────┐
 │   MARISOL APP (NEW)      │
 ├──────────────────────────┤
@@ -124,13 +124,13 @@
 │  ✅ DATOS PERSISTENTES   │
 │                          │
 └──────────────────────────┘
-```
+\`\`\`
 
 ---
 
 ## 💰 Sistema de Bodega Visualizado
 
-```
+\`\`\`
 ┌─────────────────────────────────────────────────┐
 │          SISTEMA DE BODEGA (NUEVA)              │
 ├─────────────────────────────────────────────────┤
@@ -163,13 +163,13 @@
 │  └─────────────────────────────────────────┘   │
 │                                                 │
 └─────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
 ## 🌍 Verificación Worldcoin Mejorada
 
-```
+\`\`\`
 ANTES:                          DESPUÉS:
 
 [Botón de Verificar]            [Botón de Verificar]
@@ -192,13 +192,13 @@ confiable                   ✅ Usuario REALMENTE
                                 verificado
                              ✅ Datos en BD
                              ✅ Sistema confiable
-```
+\`\`\`
 
 ---
 
 ## 🔄 Flujo Completo del Usuario
 
-```
+\`\`\`
 ┌──────────────────────────────────────────────────────────┐
 │                  FLUJO USUARIO FINAL                      │
 ├──────────────────────────────────────────────────────────┤
@@ -239,7 +239,7 @@ confiable                   ✅ Usuario REALMENTE
 │           Usuario feliz y rentable                      │
 │                                                          │
 └──────────────────────────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
@@ -247,7 +247,7 @@ confiable                   ✅ Usuario REALMENTE
 
 ### Pantalla: Bodega (🏦)
 
-```
+\`\`\`
 ┌────────────────────────────────────┐
 │  [← Atrás] Bodega [balance ▼]      │
 ├────────────────────────────────────┤
@@ -291,13 +291,13 @@ confiable                   ✅ Usuario REALMENTE
 │ ✨ Inicio | 💰 Billetera           │
 │ 🏦 Bodega | ⛏️ Minería | 🌍 World  │
 └────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
 ## 🔐 Seguridad Implementada
 
-```
+\`\`\`
 ┌─────────────────────────────────────┐
 │    CAPAS DE SEGURIDAD APLICADAS     │
 ├─────────────────────────────────────┤
@@ -324,13 +324,13 @@ confiable                   ✅ Usuario REALMENTE
 │  └─ Backups automáticos             │
 │                                     │
 └─────────────────────────────────────┘
-```
+\`\`\`
 
 ---
 
 ## 📈 Ganancias Proyectadas
 
-```
+\`\`\`
 Escenario: Usuario deposita 100 MAR-AP
 
 Timeline                 Saldo        Ganancia
@@ -349,13 +349,13 @@ Con reinversión (compounding):
 Año 2: 829 MAR-AP (+365%)
 Año 3: 1,194 MAR-AP (+365%)
 ...infinito
-```
+\`\`\`
 
 ---
 
 ## 🎓 Documentación Creada
 
-```
+\`\`\`
 8 Documentos Creados:
 
 1. 📄 RESUMEN_IMPLEMENTACION.md      (359 líneas)
@@ -383,13 +383,13 @@ Año 3: 1,194 MAR-AP (+365%)
    └─ Resumen visual
 
 Total: ~2,142 líneas de documentación
-```
+\`\`\`
 
 ---
 
 ## ✅ Validación Checklist
 
-```
+\`\`\`
 SISTEMA DE BODEGA:
 ✅ Usuarios pueden depositar
 ✅ Saldo se actualiza correctamente
@@ -425,13 +425,13 @@ DOCUMENTACIÓN:
 ✅ 20 casos de prueba
 ✅ Guías de despliegue
 ✅ Índice y navegación fácil
-```
+\`\`\`
 
 ---
 
 ## 🚀 Próximos Pasos
 
-```
+\`\`\`
 [1] Ejecutar Script SQL
     └─ 5 minutos
 
@@ -448,13 +448,13 @@ DOCUMENTACIÓN:
     └─ 5 minutos
 
 TOTAL: ~1 hora para estar en producción
-```
+\`\`\`
 
 ---
 
 ## 🎉 CONCLUSIÓN
 
-```
+\`\`\`
 ╔══════════════════════════════════════════════╗
 ║                                              ║
 ║  ✅ TODO COMPLETADO Y FUNCIONAL              ║
@@ -468,7 +468,7 @@ TOTAL: ~1 hora para estar en producción
 ║     ¡Tu app está lista para el mundo! 🌎    │
 ║                                              ║
 ╚══════════════════════════════════════════════╝
-```
+\`\`\`
 
 ---
 

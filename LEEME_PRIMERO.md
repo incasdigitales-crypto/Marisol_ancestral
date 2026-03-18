@@ -13,34 +13,34 @@ He completado **100%** de tus solicitudes:
 ## 🚀 ¿Qué Hago Ahora? (En 3 Pasos)
 
 ### Paso 1: Lee el Resumen (5 minutos)
-```
+\`\`\`
 Abre: /RESUMEN_IMPLEMENTACION.md
 
 Te dirá:
 - Qué se hizo exactamente
 - Qué necesitas hacer ahora
 - Preguntas frecuentes
-```
+\`\`\`
 
 ### Paso 2: Configura Supabase (10 minutos)
-```
+\`\`\`
 Abre: /SETUP_INSTRUCTIONS.md
 
 Te mostrará:
 - Paso a paso para ejecutar script SQL
 - Cómo validar la configuración
 - Qué hacer si no tienes Supabase
-```
+\`\`\`
 
 ### Paso 3: Prueba la App (15 minutos)
-```
+\`\`\`
 Abre: /GUIA_RAPIDA.md
 
 Aprenderás:
 - Cómo funciona el sistema de bodega
 - Cómo verifica Worldcoin
 - Cómo fluye el dinero en la app
-```
+\`\`\`
 
 ---
 
@@ -101,7 +101,7 @@ Aprenderás:
 
 ## 🎯 Flujo del Usuario Final
 
-```
+\`\`\`
 1. Usuario entra (balance = 0)
 2. Verifica Worldcoin → ✓ Identificado
 3. Inicia minería → Gana monedas ⛏️
@@ -110,13 +110,13 @@ Aprenderás:
 6. Reclama 1 MAR-AP de interés 💰
 7. Repite paso 6 diariamente
 8. ¡Ganancias infinitas! 🎉
-```
+\`\`\`
 
 ---
 
 ## 📊 Ejemplo de Rentabilidad
 
-```
+\`\`\`
 Depósito: 100 MAR-AP
 
 Después de...
@@ -128,28 +128,28 @@ Después de...
 - 10 años:   4,100 MAR-AP
 
 Rentabilidad: 364% anual (sin reinversión)
-```
+\`\`\`
 
 ---
 
 ## 🔧 Archivos Nuevos/Modificados
 
 ### ✨ Nuevos:
-```
+\`\`\`
 /components/savings-section.tsx
 /app/api/user/update-savings/route.ts
 /app/api/user/claim-savings-interest/route.ts
 /app/api/user/worldcoin-verify/route.ts
 + 8 documentos de guía
-```
+\`\`\`
 
 ### 🔄 Modificados:
-```
+\`\`\`
 /hooks/use-user.ts (agregué métodos de ahorros)
 /app/page.tsx (agregué pestaña bodega)
 /components/worldcoin-section.tsx (mejoré verificación)
 /scripts/add-savings-table.sql (actualicé BD)
-```
+\`\`\`
 
 ---
 
@@ -157,14 +157,14 @@ Rentabilidad: 364% anual (sin reinversión)
 
 **Si no tienes Supabase configurado:**
 
-```
+\`\`\`
 1. Abre la app normalmente
 2. Los datos se guardan en localStorage automáticamente
 3. Funciona 100% sin internet
 4. Cuando conectes Supabase, sincronizará
 
 ¡Perfecto para testing local!
-```
+\`\`\`
 
 ---
 
@@ -172,23 +172,23 @@ Rentabilidad: 364% anual (sin reinversión)
 
 ### Si tienes Supabase:
 
-```
+\`\`\`
 1. Abre: https://app.supabase.com
 2. SQL Editor
 3. Copia: /scripts/add-savings-table.sql
 4. Pega y ejecuta
 5. ¡Listo!
-```
+\`\`\`
 
 ### Luego despliega:
 
-```
+\`\`\`
 git add .
 git commit -m "feat: bodega y worldcoin mejorado"
 git push origin main
 
 Vercel redesplegará automáticamente ✨
-```
+\`\`\`
 
 ---
 
@@ -299,27 +299,27 @@ Tu aplicación Marisol Ancestral Token ahora tiene:
 ## 🚀 ¡EMPIEZA AHORA!
 
 ### OPCIÓN 1: Lectura Rápida (30 min)
-```
+\`\`\`
 1. Lee /RESUMEN_IMPLEMENTACION.md (5 min)
 2. Lee /GUIA_RAPIDA.md (10 min)
 3. Lee /SETUP_INSTRUCTIONS.md (10 min)
 4. Ejecuta script SQL (5 min)
-```
+\`\`\`
 
 ### OPCIÓN 2: Lectura Profunda (2 horas)
-```
+\`\`\`
 1. Lee toda la documentación
 2. Revisa el código
 3. Ejecuta todos los test cases
 4. Despliega a Vercel
-```
+\`\`\`
 
 ### OPCIÓN 3: Directo a Acción (10 min)
-```
+\`\`\`
 1. Abre /DEPLOYMENT_GUIDE.md
 2. Sigue los pasos
 3. ¡A producción!
-```
+\`\`\`
 
 ---
 

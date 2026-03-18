@@ -97,10 +97,10 @@ La aplicación usa un sistema de fallback automático:
 
 Las variables ya están configuradas en tu proyecto. Si necesitas agregarlas manualmente:
 
-```env
+\`\`\`env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+\`\`\`
 
 ---
 
