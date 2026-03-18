@@ -21,7 +21,7 @@ Una mini app de Telegram para gestionar y minar tokens MAR-AP (Marisol Ancestral
 
 ## Instalación
 
-```bash
+\`\`\`bash
 # Clonar repositorio
 git clone <repo-url>
 cd marisol-ancestral-token
@@ -31,11 +31,11 @@ npm install
 
 # Ejecutar en desarrollo
 npm run dev
-```
+\`\`\`
 
 ## Estructura del Proyecto
 
-```
+\`\`\`
 .
 ├── app/
 │   ├── page.tsx              # Página principal
@@ -54,14 +54,14 @@ npm run dev
 │
 └── public/
     └── marisol-character.jpg # Imagen del personaje
-```
+\`\`\`
 
 ## Componentes
 
 ### useUser Hook
 Gestiona el estado del usuario y datos de minería:
 
-```typescript
+\`\`\`typescript
 const {
   user,                    // Datos del usuario
   loading,                 // Estado de carga
@@ -71,7 +71,7 @@ const {
   upgradeMining,          // Mejorar nivel
   setWorldcoinVerified    // Verificar Worldcoin
 } = useUser();
-```
+\`\`\`
 
 ### HeroSection
 Pantalla de inicio con información del token.
@@ -147,19 +147,19 @@ Para usar como mini app en Telegram:
 2. Configurar mini app URL
 3. Usar botón para abrir: `/start`
 
-```json
+\`\`\`json
 {
   "url": "https://tu-dominio.vercel.app",
   "is_full_screen": false
 }
-```
+\`\`\`
 
 ## Integración Worldcoin
 
 ### Verificación Real
 Para integrar verificación real de Worldcoin:
 
-```typescript
+\`\`\`typescript
 // En worldcoin-section.tsx
 const handleConnect = async () => {
   const response = await fetch('/api/worldcoin/verify', {
@@ -170,7 +170,7 @@ const handleConnect = async () => {
   const { address } = await response.json();
   setWorldcoinVerified(address);
 };
-```
+\`\`\`
 
 ### API Endpoints Necesarios
 - `POST /api/worldcoin/verify` - Verificar identidad
@@ -178,7 +178,7 @@ const handleConnect = async () => {
 
 ## Variables de Entorno
 
-```env
+\`\`\`env
 # Telegram
 NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_token
 
@@ -189,35 +189,35 @@ WORLDCOIN_API_URL=https://api.worldcoin.org/v1
 # Supabase (cuando se implemente)
 NEXT_PUBLIC_SUPABASE_URL=your_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
-```
+\`\`\`
 
 ## Deploy
 
 ### Con Vercel (Recomendado)
 
-```bash
+\`\`\`bash
 # 1. Conectar repositorio a Vercel
 vercel --prod
 
 # 2. Configurar variables de entorno en Vercel
 
 # 3. Deploy automático con cada push
-```
+\`\`\`
 
 ### Manual
 
-```bash
+\`\`\`bash
 npm run build
 npm start
-```
+\`\`\`
 
 ## Testing
 
 ### En Navegador
-```bash
+\`\`\`bash
 npm run dev
 # Acceder a http://localhost:3000
-```
+\`\`\`
 
 ### En Telegram
 1. Deploy a Vercel

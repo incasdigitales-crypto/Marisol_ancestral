@@ -6,11 +6,11 @@ Tu base de datos se inicializa automáticamente con un simple endpoint.
 
 Sube los cambios a tu repositorio:
 
-```bash
+\`\`\`bash
 git add .
 git commit -m "Setup Supabase initialization"
 git push origin main
-```
+\`\`\`
 
 Vercel deploy automáticamente.
 
@@ -18,9 +18,9 @@ Vercel deploy automáticamente.
 
 Una vez desplegado, ejecuta en tu navegador:
 
-```
+\`\`\`
 https://tu-dominio.vercel.app/api/init?token=marisol-ancestral-init-2024
-```
+\`\`\`
 
 Reemplaza:
 - `tu-dominio` con tu dominio real de Vercel (ej: marisol-miniapp.vercel.app)
@@ -30,13 +30,13 @@ Reemplaza:
 
 Si ves esta respuesta, la BD está lista:
 
-```json
+\`\`\`json
 {
   "success": true,
   "message": "Database initialized successfully",
   "timestamp": "2024-01-26T..."
 }
-```
+\`\`\`
 
 ## ¡Listo!
 

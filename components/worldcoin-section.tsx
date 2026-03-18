@@ -13,20 +13,48 @@ interface WorldcoinSectionProps {
 
 export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSectionProps) {
   const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const isConnected = user?.worldcoinVerified ?? false;
   const walletAddress = user?.worldcoinAddress || 'No verificado';
 
   const handleConnect = async () => {
     setIsVerifying(true);
-    
-    // Simulate verification process
-    setTimeout(() => {
-      const mockAddress = `0x${Math.random().toString(16).substr(2, 40)}`;
-      if (onVerify) {
-        onVerify(mockAddress);
+    setVerificationStatus('verifying');
+    setErrorMessage('');
+
+    try {
+      // Attempt actual Worldcoin verification via API
+      const response = await fetch('/api/user/worldcoin-verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telegramId: user?.telegramId,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Verification failed');
       }
+
+      const data = await response.json();
+      
+      if (data.worldcoinAddress) {
+        setVerificationStatus('success');
+        if (onVerify) {
+          onVerify(data.worldcoinAddress);
+        }
+      } else {
+        throw new Error('No address returned from verification');
+      }
+    } catch (error) {
+      setVerificationStatus('error');
+      setErrorMessage(error instanceof Error ? error.message : 'Error de verificación');
+      console.error('[v0] Worldcoin verification error:', error);
+    } finally {
       setIsVerifying(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -100,23 +128,36 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
         </p>
 
         {!isConnected ? (
-          <Button
-            onClick={handleConnect}
-            disabled={isVerifying}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
-          >
-            {isVerifying ? 'Verificando...' : 'Verificar con Worldcoin'}
-          </Button>
+          <div className="space-y-3">
+            <Button
+              onClick={handleConnect}
+              disabled={isVerifying}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
+            >
+              {isVerifying ? 'Verificando tu identidad...' : 'Verificar Identidad Ahora'}
+            </Button>
+            {verificationStatus === 'error' && (
+              <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
+                <p className="text-xs text-red-400">{errorMessage}</p>
+              </div>
+            )}
+            {verificationStatus === 'verifying' && (
+              <div className="bg-primary/20 border border-primary/50 rounded-lg p-3 text-center">
+                <p className="text-xs text-primary animate-pulse">Por favor, sigue los pasos en la aplicación Worldcoin...</p>
+              </div>
+            )}
+          </div>
         ) : (
-          <div className="space-y-2">
-            <p className="text-xs text-foreground/60 text-center">
-              Identidad verificada ✓
-            </p>
+          <div className="space-y-3">
+            <div className="bg-primary/20 border border-primary/50 rounded-lg p-4 text-center">
+              <p className="text-sm text-primary font-semibold mb-2">✓ Identidad Verificada</p>
+              <p className="text-xs text-foreground/70 break-all font-mono">{walletAddress}</p>
+            </div>
             <Button
               disabled
-              className="w-full bg-primary/20 text-primary font-semibold py-6"
+              className="w-full bg-primary/20 text-primary font-semibold py-4"
             >
-              ✓ {walletAddress.substring(0, 10)}...
+              ✓ Verificado exitosamente
             </Button>
           </div>
         )}
