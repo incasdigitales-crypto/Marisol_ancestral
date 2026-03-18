@@ -24,39 +24,50 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
     setErrorMessage('');
 
     try {
-      // Simulate Worldcoin verification process
-      // In production, this would redirect to Worldcoin SDK
-      await new Promise(resolve => setTimeout(resolve, 3000)); // Simular delay de verificación
+      console.log('[v0] Starting Worldcoin verification...');
+      
+      // Simulate Worldcoin verification process with visual feedback
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-      // Call verification API
+      if (!user?.telegramId) {
+        throw new Error('Usuario no identificado');
+      }
+
+      // Call verification API with proper error handling
       const response = await fetch('/api/user/worldcoin-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          telegramId: user?.telegramId,
+          telegramId: user.telegramId,
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Verification failed');
+        console.error('[v0] API error response:', data);
+        throw new Error(data.details || data.error || 'Verification failed');
       }
 
-      const data = await response.json();
-      
-      if (data.worldcoinAddress) {
-        setVerificationStatus('success');
-        if (onVerify) {
-          onVerify(data.worldcoinAddress);
-        }
-        console.log('[v0] Worldcoin verification successful:', data.worldcoinAddress);
-      } else {
+      if (!data.success || !data.worldcoinAddress) {
+        console.error('[v0] Invalid response structure:', data);
         throw new Error('No address returned from verification');
       }
+
+      console.log('[v0] Worldcoin verification successful:', data.worldcoinAddress);
+      setVerificationStatus('success');
+      
+      if (onVerify) {
+        onVerify(data.worldcoinAddress);
+      }
     } catch (error) {
-      setVerificationStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Error de verificación');
       console.error('[v0] Worldcoin verification error:', error);
+      setVerificationStatus('error');
+      setErrorMessage(
+        error instanceof Error 
+          ? error.message 
+          : 'Error desconocido en la verificación'
+      );
     } finally {
       setIsVerifying(false);
     }
@@ -159,15 +170,18 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
           </div>
         ) : (
           <div className="space-y-3">
-            <div className="bg-primary/20 border border-primary/50 rounded-lg p-4 text-center">
-              <p className="text-sm text-primary font-semibold mb-2">✓ Identidad Verificada</p>
-              <p className="text-xs text-foreground/70 break-all font-mono">{walletAddress}</p>
+            <div className="bg-primary/20 border border-primary/50 rounded-lg p-4 text-center space-y-2">
+              <p className="text-sm text-primary font-semibold">✓ Identidad Verificada</p>
+              <p className="text-xs text-foreground/70 break-all font-mono bg-background/50 rounded p-2">{walletAddress}</p>
             </div>
             <Button
-              disabled
-              className="w-full bg-primary/20 text-primary font-semibold py-4"
+              onClick={() => {
+                setVerificationStatus('idle');
+                setErrorMessage('');
+              }}
+              className="w-full bg-primary/20 text-primary hover:bg-primary/30 font-semibold py-4 border border-primary/30"
             >
-              ✓ Verificado exitosamente
+              ✓ Desconectarse
             </Button>
           </div>
         )}
