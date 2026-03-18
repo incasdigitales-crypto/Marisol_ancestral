@@ -19,9 +19,11 @@ export async function POST(request: NextRequest) {
           username,
           balance: 0,
           mining_balance: 0,
+          savings_balance: 0,
           worldcoin_verified: false,
           mining_power: 1,
           mining_level: 1,
+          last_savings_update: null,
         },
       ])
       .select()
@@ -38,10 +40,12 @@ export async function POST(request: NextRequest) {
       username: data.username,
       balance: parseFloat(data.balance) || 0,
       miningBalance: parseFloat(data.mining_balance) || 0,
+      savingsBalance: parseFloat(data.savings_balance) || 0,
       worldcoinVerified: data.worldcoin_verified || false,
       worldcoinAddress: data.worldcoin_address,
       miningPower: parseFloat(data.mining_power) || 1,
       miningLevel: data.mining_level || 1,
+      lastSavingsUpdate: data.last_savings_update,
       createdAt: data.created_at,
     });
   } catch (error) {

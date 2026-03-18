@@ -24,7 +24,11 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
     setErrorMessage('');
 
     try {
-      // Attempt actual Worldcoin verification via API
+      // Simulate Worldcoin verification process
+      // In production, this would redirect to Worldcoin SDK
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Simular delay de verificación
+
+      // Call verification API
       const response = await fetch('/api/user/worldcoin-verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -45,6 +49,7 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
         if (onVerify) {
           onVerify(data.worldcoinAddress);
         }
+        console.log('[v0] Worldcoin verification successful:', data.worldcoinAddress);
       } else {
         throw new Error('No address returned from verification');
       }
@@ -142,8 +147,13 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
               </div>
             )}
             {verificationStatus === 'verifying' && (
-              <div className="bg-primary/20 border border-primary/50 rounded-lg p-3 text-center">
-                <p className="text-xs text-primary animate-pulse">Por favor, sigue los pasos en la aplicación Worldcoin...</p>
+              <div className="bg-primary/20 border border-primary/50 rounded-lg p-4 text-center space-y-2">
+                <p className="text-xs text-primary animate-pulse">Verificando tu identidad...</p>
+                <div className="flex justify-center gap-1">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                </div>
               </div>
             )}
           </div>
