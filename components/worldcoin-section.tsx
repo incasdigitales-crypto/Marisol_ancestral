@@ -35,15 +35,23 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
   const handleWalletSubmit = async () => {
     if (!walletInput.trim()) {
       setErrorMessage('Por favor ingresa una dirección de billetera');
+      setIsVerifying(false);
       return;
     }
 
     if (!validateWalletAddress(walletInput)) {
       setErrorMessage('Formato de dirección inválido. Debe comenzar con 0x seguido de 40 caracteres hexadecimales');
+      setIsVerifying(false);
       return;
     }
 
+    setIsVerifying(true);
+    setVerificationStatus('verifying');
+    setErrorMessage('');
+
     try {
+      console.log('[v0] Starting verification with address:', walletInput.trim());
+      
       // Send to API for verification
       const response = await fetch('/api/user/verify-worldcoin', {
         method: 'POST',
@@ -54,25 +62,30 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
         }),
       });
 
+      console.log('[v0] API Response status:', response.status);
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al verificar la billetera');
+        const errorData = await response.json().catch(() => ({ error: 'Error en respuesta del servidor' }));
+        console.error('[v0] API Error:', errorData);
+        throw new Error(errorData.error || `Error ${response.status}: Error al verificar la billetera`);
       }
 
       const data = await response.json();
+      console.log('[v0] Verification successful:', data);
+      
       setVerificationStatus('success');
       setWalletInput('');
       setShowWalletInput(false);
+      setIsVerifying(false);
       
       if (onVerify) {
         onVerify(data.worldcoinAddress);
       }
     } catch (error) {
-      setVerificationStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Error de verificación');
       console.error('[v0] Verification error:', error);
-    } finally {
+      setVerificationStatus('error');
       setIsVerifying(false);
+      setErrorMessage(error instanceof Error ? error.message : 'Error desconocido en verificación');
     }
   };
 
@@ -154,7 +167,25 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
           identidad Worldcoin para comenzar.
         </p>
 
-        {!isConnected ? (
+        {verificationStatus === 'success' ? (
+          <div className="space-y-3 animate-fade-in">
+            <div className="bg-green-500/20 border-2 border-green-500/50 rounded-lg p-4 text-center space-y-3">
+              <div className="text-3xl mb-2">✓</div>
+              <p className="text-sm text-green-400 font-bold">¡Verificación Completada!</p>
+              <p className="text-xs text-foreground/70 break-all font-mono">{walletAddress}</p>
+              <div className="bg-green-500/30 rounded p-3 mt-2 space-y-1">
+                <p className="text-sm text-green-300 font-bold">+10 MAR Ancestral</p>
+                <p className="text-xs text-foreground/70">¡Recibiste tu regalo de bienvenida!</p>
+              </div>
+            </div>
+            <Button
+              onClick={onBack}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
+            >
+              Continuar a Inicio
+            </Button>
+          </div>
+        ) : !isConnected ? (
           <div className="space-y-3">
             {!showWalletInput ? (
               <>
@@ -163,9 +194,9 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
                   disabled={isVerifying}
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
                 >
-                  {isVerifying ? 'Preparando verificación...' : 'Verificar Identidad Ahora'}
+                  {isVerifying ? 'Preparando...' : 'Verificar Identidad Ahora'}
                 </Button>
-                <p className="text-xs text-foreground/60 text-center">Sin salir de esta aplicación</p>
+                <p className="text-xs text-foreground/60 text-center">Todo ocurre aquí, sin salir de la app</p>
               </>
             ) : (
               <>
@@ -178,14 +209,15 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
                     placeholder="0x... (40 caracteres hexadecimales)"
                     value={walletInput}
                     onChange={(e) => setWalletInput(e.target.value)}
-                    className="w-full px-4 py-3 bg-card/50 border border-primary/30 rounded-lg text-foreground placeholder-foreground/50 focus:outline-none focus:border-primary/60"
+                    className="w-full px-4 py-3 bg-card/50 border border-primary/30 rounded-lg text-foreground placeholder-foreground/50 focus:outline-none focus:border-primary/60 transition-colors"
+                    autoFocus
                   />
                   <p className="text-xs text-foreground/50">Ejemplo: 0x1234567890abcdef1234567890abcdef12345678</p>
                 </div>
 
                 {errorMessage && (
-                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
-                    <p className="text-xs text-red-400">{errorMessage}</p>
+                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 animate-shake">
+                    <p className="text-xs text-red-400 font-semibold">{errorMessage}</p>
                   </div>
                 )}
 
@@ -193,7 +225,7 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
                   <Button
                     onClick={handleWalletSubmit}
                     disabled={isVerifying || !walletInput.trim()}
-                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 disabled:opacity-50"
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 disabled:opacity-50 transition-all"
                   >
                     {isVerifying ? 'Verificando...' : 'Verificar'}
                   </Button>
@@ -201,7 +233,7 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
                     onClick={handleCancel}
                     disabled={isVerifying}
                     variant="outline"
-                    className="flex-1 bg-transparent border-foreground/20 text-foreground/60 hover:text-foreground font-semibold py-3"
+                    className="flex-1 bg-transparent border border-foreground/20 text-foreground/60 hover:text-foreground font-semibold py-3"
                   >
                     Cancelar
                   </Button>
@@ -220,10 +252,10 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
               </div>
             </div>
             <Button
-              disabled
-              className="w-full bg-primary/20 text-primary font-semibold py-4"
+              onClick={onBack}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
             >
-              ✓ Verificado exitosamente
+              Volver al Inicio
             </Button>
           </div>
         )}
