@@ -12,6 +12,16 @@ interface SavingsSectionProps {
   onClaimDailyInterest: () => void;
 }
 
+const SAVINGS_TIERS = [
+  { level: 1, name: 'Jarra de Barro', cost: 0, costCurrency: 'MAR', multiplier: 1 },
+  { level: 2, name: 'Cofre de Madera', cost: 5, costCurrency: 'WLD', multiplier: 1.5 },
+  { level: 3, name: 'Arcón de Hierro', cost: 10, costCurrency: 'WLD', multiplier: 2 },
+  { level: 4, name: 'Caja de Oro', cost: 20, costCurrency: 'WLD', multiplier: 2.5 },
+  { level: 5, name: 'Bóveda Platinada', cost: 35, costCurrency: 'WLD', multiplier: 3 },
+  { level: 6, name: 'Tesoro Sagrado', cost: 60, costCurrency: 'WLD', multiplier: 3.5 },
+  { level: 7, name: 'Santuario Eterno', cost: 80, costCurrency: 'WLD', multiplier: 4 },
+];
+
 export default function SavingsSection({ user, onSavingsDeposit, onClaimDailyInterest }: SavingsSectionProps) {
   const [depositAmount, setDepositAmount] = useState('');
   const [isDepositing, setIsDepositing] = useState(false);
@@ -100,7 +110,13 @@ export default function SavingsSection({ user, onSavingsDeposit, onClaimDailyInt
   };
 
   const savingsBalance = user?.savingsBalance || 0;
-  const interestRate = 1; // 1 MAR-AP por día
+  const savingsLevel = user?.savingsLevel || 1;
+  const currentTier = SAVINGS_TIERS.find(t => t.level === savingsLevel) || SAVINGS_TIERS[0];
+  
+  // Calculate daily interest based on savings amount and tier multiplier
+  const dailyInterest = savingsBalance > 0 
+    ? Math.max(1, (savingsBalance / 100) * currentTier.multiplier)
+    : 0;
 
   return (
     <div className="w-full max-w-md mx-auto px-4 space-y-6 py-8">
@@ -130,7 +146,7 @@ export default function SavingsSection({ user, onSavingsDeposit, onClaimDailyInt
             {canClaimInterest ? '¡Disponible!' : 'Próximo en: ' + timeUntilClaim}
           </p>
         </div>
-        <p className="text-xs text-foreground/50">+{interestRate} MAR-AP cada 24 horas</p>
+        <p className="text-xs text-foreground/50">+{dailyInterest.toFixed(2)} MAR-AP cada 24 horas</p>
 
         {canClaimInterest && (
           <Button
@@ -172,26 +188,49 @@ export default function SavingsSection({ user, onSavingsDeposit, onClaimDailyInt
         </div>
       </Card>
 
-      {/* How it Works */}
+      {/* Current Tier Info */}
+      <Card className="bg-primary/10 border border-primary/30 p-6 space-y-4">
+        <h3 className="text-lg font-semibold text-primary">Tu Nivel Actual</h3>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-foreground/60">Nivel:</span>
+            <span className="text-lg font-bold text-primary">{savingsLevel}: {currentTier.name}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-foreground/60">Multiplicador:</span>
+            <span className="text-lg font-bold text-primary">{currentTier.multiplier}x</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-foreground/60">Fórmula:</span>
+            <span className="text-sm text-foreground/70">Saldo ÷ 100 × {currentTier.multiplier}</span>
+          </div>
+        </div>
+      </Card>
+
+      {/* Tier List */}
       <Card className="bg-card/40 backdrop-blur-xl border border-primary/20 p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-primary">¿Cómo Funciona?</h3>
-        <div className="space-y-3 text-sm">
-          <div className="flex gap-3">
-            <div className="text-primary font-bold min-w-6">1</div>
-            <p className="text-foreground/70">Deposita MAR-AP en tu bodega</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold min-w-6">2</div>
-            <p className="text-foreground/70">Espera 24 horas</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold min-w-6">3</div>
-            <p className="text-foreground/70">Reclama 1 MAR-AP de interés diario</p>
-          </div>
-          <div className="flex gap-3">
-            <div className="text-primary font-bold min-w-6">4</div>
-            <p className="text-foreground/70">¡Gana indefinidamente!</p>
-          </div>
+        <h3 className="text-lg font-semibold text-primary">Todos los Niveles</h3>
+        <div className="space-y-2 max-h-64 overflow-y-auto">
+          {SAVINGS_TIERS.map((tier) => (
+            <div
+              key={tier.level}
+              className={`p-3 rounded-lg border transition-all ${
+                tier.level === savingsLevel
+                  ? 'bg-primary/20 border-primary/50'
+                  : 'bg-card/30 border-primary/10'
+              }`}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="font-semibold text-primary">Nivel {tier.level}: {tier.name}</p>
+                  <p className="text-xs text-foreground/60">Multiplicador: {tier.multiplier}x</p>
+                </div>
+                <span className="text-xs font-bold text-foreground/70 whitespace-nowrap ml-2">
+                  {tier.cost === 0 ? 'Gratis' : `${tier.cost} ${tier.costCurrency}`}
+                </span>
+              </div>
+            </div>
+          ))}
         </div>
       </Card>
 
@@ -222,8 +261,8 @@ export default function SavingsSection({ user, onSavingsDeposit, onClaimDailyInt
       {savingsBalance > 0 && (
         <Card className="bg-primary/10 border border-primary/30 p-6 space-y-3 text-center">
           <p className="text-xs text-foreground/60">Proyección Anual</p>
-          <p className="text-2xl font-bold text-primary">{(savingsBalance + 365).toFixed(2)} MAR-AP</p>
-          <p className="text-xs text-foreground/50">Si mantienes tu bodega llena</p>
+          <p className="text-2xl font-bold text-primary">{(savingsBalance + (dailyInterest * 365)).toFixed(2)} MAR-AP</p>
+          <p className="text-xs text-foreground/50">{dailyInterest.toFixed(2)} MAR/día × 365 días</p>
         </Card>
       )}
     </div>

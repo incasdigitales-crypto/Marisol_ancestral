@@ -1,13 +1,18 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import type { UserData } from '@/hooks/use-user';
 
 interface HeroSectionProps {
-  onNavigate: (view: 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'mining') => void;
+  onNavigate: (view: 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings' | 'guide' | 'marisol') => void;
+  user: UserData | null;
 }
 
-export default function HeroSection({ onNavigate }: HeroSectionProps) {
+export default function HeroSection({ onNavigate, user }: HeroSectionProps) {
+  const isVerified = user?.worldcoinVerified ?? false;
+  
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
       {/* Fondo mystical con imagen */}
@@ -100,6 +105,33 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           </p>
           <p className="text-xs text-foreground/50">Poder ancestral activado</p>
         </div>
+
+        {/* Verification Status */}
+        {!isVerified ? (
+          <Card className="bg-yellow-500/20 border border-yellow-500/50 p-6 space-y-3">
+            <div className="text-center">
+              <p className="text-sm font-semibold text-yellow-600 mb-2">Verificación Requerida</p>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Para desbloquear todo el potencial de Marisol, debes:
+              </p>
+            </div>
+            <ol className="text-xs text-foreground/70 space-y-1 list-decimal list-inside">
+              <li>Verificar tu identidad con Worldcoin</li>
+              <li>Conectar tu billetera Wordcoin</li>
+              <li>¡Recibe 10 monedas MAR de bienvenida!</li>
+            </ol>
+          </Card>
+        ) : (
+          <Card className="bg-primary/20 border border-primary/50 p-6 space-y-3 text-center">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-2xl">✓</span>
+              <div>
+                <p className="text-sm font-semibold text-primary">¡Verificado!</p>
+                <p className="text-xs text-foreground/70">Billetera conectada</p>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* CTA Buttons */}
         <div className="space-y-3 w-full mt-6">

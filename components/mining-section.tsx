@@ -12,11 +12,41 @@ interface MiningSectionProps {
 }
 
 const MINING_CONFIGS = [
-  { level: 1, power: 1, earning: 0.1, upgradeCost: 0 },
-  { level: 2, power: 2, earning: 0.25, upgradeCost: 50 },
-  { level: 3, power: 3, earning: 0.5, upgradeCost: 150 },
-  { level: 4, power: 5, earning: 1.0, upgradeCost: 500 },
-  { level: 5, power: 10, earning: 2.5, upgradeCost: 2000 },
+  { 
+    level: 1, 
+    name: 'Aprendiz',
+    dailyEarning: 2, 
+    upgradeCost: 0,
+    costCurrency: 'MAR'
+  },
+  { 
+    level: 2, 
+    name: 'Minero',
+    dailyEarning: 5, 
+    upgradeCost: 15,
+    costCurrency: 'WLD'
+  },
+  { 
+    level: 3, 
+    name: 'Maestro',
+    dailyEarning: 7, 
+    upgradeCost: 25,
+    costCurrency: 'WLD'
+  },
+  { 
+    level: 4, 
+    name: 'Leyenda',
+    dailyEarning: 10, 
+    upgradeCost: 40,
+    costCurrency: 'WLD'
+  },
+  { 
+    level: 5, 
+    name: 'Dragón Ancestral',
+    dailyEarning: 20, 
+    upgradeCost: 75,
+    costCurrency: 'WLD'
+  },
 ];
 
 export default function MiningSection({ user, onMiningEarnings, onUpgrade }: MiningSectionProps) {
@@ -27,14 +57,15 @@ export default function MiningSection({ user, onMiningEarnings, onUpgrade }: Min
   const currentConfig = MINING_CONFIGS.find(c => c.level === user?.miningLevel) || MINING_CONFIGS[0];
   const nextConfig = MINING_CONFIGS[user?.miningLevel ?? 0];
 
-  // Mining loop
+  // Mining loop - earns daily amount distributed over 24 hours (86400 seconds)
   useEffect(() => {
     if (!isMining || !user) return;
 
     const interval = setInterval(() => {
-      const earning = currentConfig.earning;
-      setTotalEarned(prev => prev + earning);
-      onMiningEarnings(earning);
+      // Daily earning divided by number of seconds in a day
+      const earningPerSecond = currentConfig.dailyEarning / 86400;
+      setTotalEarned(prev => prev + earningPerSecond);
+      onMiningEarnings(earningPerSecond);
       setSessionTime(prev => prev + 1);
     }, 1000);
 
@@ -106,31 +137,34 @@ export default function MiningSection({ user, onMiningEarnings, onUpgrade }: Min
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-foreground/60">Nivel Actual</span>
-            <span className="text-lg font-bold text-primary">{user?.miningLevel || 1}</span>
+            <div className="text-right">
+              <p className="text-lg font-bold text-primary">{user?.miningLevel || 1}: {currentConfig.name}</p>
+            </div>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-foreground/60">Poder de Minería</span>
-            <span className="text-lg font-bold text-primary">{user?.miningPower || 1}x</span>
+            <span className="text-sm text-foreground/60">Ganancia Diaria</span>
+            <span className="text-lg font-bold text-primary">{currentConfig.dailyEarning} MAR/día</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-foreground/60">Ganancia por Segundo</span>
-            <span className="text-lg font-bold text-primary">{currentConfig.earning} MAR-AP</span>
+            <span className="text-sm text-foreground/60">Por Segundo</span>
+            <span className="text-sm text-foreground/70">{(currentConfig.dailyEarning / 86400).toFixed(6)} MAR</span>
           </div>
         </div>
 
         {/* Progress to next level */}
         {nextConfig && (
           <div className="pt-4 border-t border-primary/20 space-y-3">
-            <p className="text-xs text-foreground/60">Próximo nivel: {nextConfig.level}</p>
+            <p className="text-xs text-foreground/60">Próximo: Nivel {nextConfig.level} - {nextConfig.name}</p>
             <div className="bg-card/50 rounded-full h-2 overflow-hidden border border-primary/20">
               <div
                 className="h-full bg-primary transition-all duration-300"
                 style={{ width: `${Math.min((totalEarned / (nextConfig.upgradeCost || 100)) * 100, 100)}%` }}
               />
             </div>
-            <p className="text-xs text-foreground/50 text-center">
-              Costo de mejora: {nextConfig.upgradeCost} WLD
-            </p>
+            <div className="flex justify-between">
+              <span className="text-xs text-foreground/60">Costo: {nextConfig.upgradeCost} {nextConfig.costCurrency}</span>
+              <span className="text-xs text-foreground/60">Ganancia: {nextConfig.dailyEarning} MAR/día</span>
+            </div>
           </div>
         )}
       </Card>
@@ -159,7 +193,7 @@ export default function MiningSection({ user, onMiningEarnings, onUpgrade }: Min
             onClick={handleUpgrade}
             className="w-full bg-primary/20 hover:bg-primary/30 text-primary border border-primary/50 font-semibold py-4"
           >
-            Mejorar a Nivel {(user.miningLevel + 1)} - {nextConfig?.upgradeCost} WLD
+            Mejorar a Nivel {(user.miningLevel + 1)}: {nextConfig?.name} - {nextConfig?.upgradeCost} {nextConfig?.costCurrency}
           </Button>
         )}
       </div>
