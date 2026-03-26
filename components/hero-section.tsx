@@ -110,18 +110,23 @@ export default function HeroSection({ onNavigate, user }: HeroSectionProps) {
         {!isVerified ? (
           <Card className="bg-yellow-500/20 border border-yellow-500/50 p-6 space-y-3">
             <div className="text-center">
-              <p className="text-sm font-semibold text-yellow-600 mb-2">Próximo Paso: Conectar Billetera</p>
+              <p className="text-sm font-semibold text-yellow-600 mb-2">Verificación Worldcoin</p>
               <p className="text-xs text-foreground/70 leading-relaxed">
-                ¡Sin salir de esta app! Solo ingresa tu dirección Worldcoin:
+                Dos pasos simples para desbloquear todo el potencial:
               </p>
             </div>
-            <ol className="text-xs text-foreground/70 space-y-1 list-decimal list-inside">
-              <li>Haz clic en "Verificar Worldcoin" abajo</li>
-              <li>Ingresa tu dirección de billetera (0x...)</li>
-              <li>¡Recibe 10 MAR de bienvenida!</li>
-            </ol>
+            <div className="space-y-2 text-xs text-foreground/70">
+              <div className="p-2 bg-yellow-500/20 rounded">
+                <p className="font-semibold text-yellow-600">Paso 1: Verificación Automática</p>
+                <p>La app envía solicitud a Worldcoin - +10 MAR</p>
+              </div>
+              <div className="p-2 bg-yellow-500/10 rounded border border-yellow-500/30">
+                <p className="font-semibold text-yellow-600">Paso 2: Verificación Opcional</p>
+                <p>Verificación adicional de seguridad - +10 MAR (si lo haces)</p>
+              </div>
+            </div>
             <p className="text-xs text-foreground/50 text-center pt-2 border-t border-yellow-500/30">
-              Consigue tu dirección en World App → Billetera
+              Haz clic en "Verificar Worldcoin" abajo para comenzar
             </p>
           </Card>
         ) : (
@@ -130,7 +135,7 @@ export default function HeroSection({ onNavigate, user }: HeroSectionProps) {
               <span className="text-2xl">✓</span>
               <div>
                 <p className="text-sm font-semibold text-primary">¡Verificado!</p>
-                <p className="text-xs text-foreground/70">Billetera conectada y 10 MAR recibido</p>
+                <p className="text-xs text-foreground/70">Billetera conectada y bonificación recibida</p>
               </div>
             </div>
           </Card>

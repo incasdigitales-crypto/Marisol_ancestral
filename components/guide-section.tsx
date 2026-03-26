@@ -102,42 +102,40 @@ export default function GuideSection({ onBack }: GuideSectionProps) {
             </Card>
 
             <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-6 space-y-4">
-              <h4 className="text-lg font-semibold text-primary">Pasos para Conectar</h4>
-              <ol className="space-y-3 text-sm text-foreground/70 list-decimal list-inside">
-                <li>Ve a la sección "Worldcoin" en la app</li>
-                <li>Haz clic en "Verificar Identidad Ahora"</li>
-                <li>Se mostrará un campo para ingresar tu dirección</li>
-                <li>Copia tu dirección de billetera Worldcoin y pégala</li>
-                <li>Haz clic en "Verificar"</li>
-                <li>¡Listo! Recibe +10 MAR como bienvenida</li>
-              </ol>
-            </Card>
-
-            <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-6 space-y-4">
-              <h4 className="text-lg font-semibold text-primary">¿Cómo Encontrar tu Dirección?</h4>
-              <div className="space-y-3 text-sm text-foreground/70">
+              <h4 className="text-lg font-semibold text-primary">Dos Pasos de Verificación</h4>
+              <div className="space-y-3">
                 <div className="p-3 bg-primary/10 border border-primary/20 rounded">
-                  <p className="font-semibold text-primary mb-1">En World App:</p>
-                  <p>Abre World App → Tu Perfil → Billetera → Copia tu dirección (0x...)</p>
+                  <p className="font-semibold text-primary mb-1">Paso 1: Verificación Principal (Obligatorio)</p>
+                  <p className="text-xs text-foreground/70 mb-2">La app enviará una solicitud de verificación a Worldcoin automáticamente.</p>
+                  <p className="text-xs font-bold text-primary">Recompensa: +10 MAR</p>
                 </div>
                 <div className="p-3 bg-primary/10 border border-primary/20 rounded">
-                  <p className="font-semibold text-primary mb-1">Formato correcto:</p>
-                  <p className="font-mono text-xs break-all">0x1234567890abcdef1234567890abcdef12345678</p>
-                </div>
-                <div className="p-3 bg-primary/10 border border-primary/20 rounded">
-                  <p className="font-semibold text-primary mb-1">Verificación sin salir:</p>
-                  <p>Todo ocurre aquí, nunca te redirigimos a otros sitios</p>
+                  <p className="font-semibold text-primary mb-1">Paso 2: Verificación Secundaria (Opcional)</p>
+                  <p className="text-xs text-foreground/70 mb-2">Después, tienes la opción de una verificación adicional de seguridad.</p>
+                  <p className="text-xs font-bold text-primary">Recompensa: +10 MAR (si lo haces)</p>
                 </div>
               </div>
             </Card>
 
-            <Card className="bg-yellow-500/20 border border-yellow-500/50 p-6 space-y-3">
-              <h4 className="text-lg font-semibold text-yellow-600">Importante</h4>
+            <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-6 space-y-4">
+              <h4 className="text-lg font-semibold text-primary">Cómo Funciona</h4>
+              <ol className="space-y-2 text-sm text-foreground/70 list-decimal list-inside">
+                <li>Haz clic en "Iniciar Verificación"</li>
+                <li>La app envía una solicitud a Worldcoin</li>
+                <li>Recibe +10 MAR de forma automática</li>
+                <li>Se te ofrece una verificación secundaria opcional</li>
+                <li>Si la completas, recibes +10 MAR más (total +20 MAR)</li>
+              </ol>
+            </Card>
+
+            <Card className="bg-green-500/20 border border-green-500/50 p-6 space-y-3">
+              <h4 className="text-lg font-semibold text-green-600">Ventajas</h4>
               <ul className="space-y-2 text-xs text-foreground/70">
-                <li>• Tu dirección debe empezar con "0x"</li>
-                <li>• Debe tener exactamente 40 caracteres hexadecimales</li>
-                <li>• Verifica que sea tu dirección Worldcoin correcta</li>
-                <li>• No compartiremos tu dirección con terceros</li>
+                <li>✓ No necesitas copiar/pegar tu dirección</li>
+                <li>✓ La verificación es completamente automática</li>
+                <li>✓ +10 MAR de bonificación inicial</li>
+                <li>✓ +10 MAR adicionales si haces verificación secundaria</li>
+                <li>✓ Todo ocurre dentro de la app</li>
               </ul>
             </Card>
           </div>

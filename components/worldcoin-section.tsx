@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import type { UserData } from '@/hooks/use-user';
@@ -9,344 +9,331 @@ interface WorldcoinSectionProps {
   onBack: () => void;
   user: UserData | null;
   onVerify?: (address: string) => void;
+  onBonusEarned?: (amount: number) => void;
 }
 
-export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSectionProps) {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationStatus, setVerificationStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle');
+type VerificationStage = 'idle' | 'primary-verifying' | 'primary-success' | 'secondary-option' | 'secondary-verifying' | 'secondary-success' | 'complete';
+
+export default function WorldcoinSection({ onBack, user, onVerify, onBonusEarned }: WorldcoinSectionProps) {
+  const [stage, setStage] = useState<VerificationStage>('idle');
+  const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [walletInput, setWalletInput] = useState('');
-  const [showWalletInput, setShowWalletInput] = useState(false);
-  const isConnected = user?.worldcoinVerified ?? false;
-  const walletAddress = user?.worldcoinAddress || 'No verificado';
+  const [totalBonusEarned, setTotalBonusEarned] = useState(0);
 
-  const validateWalletAddress = (address: string): boolean => {
-    // Validate Worldcoin address format (0x followed by 40 hex characters)
-    return /^0x[a-fA-F0-9]{40}$/.test(address.trim());
-  };
+  const isVerified = user?.worldcoinVerified ?? false;
 
-  const handleConnect = async () => {
-    setIsVerifying(true);
-    setVerificationStatus('verifying');
+  // Simulate sending primary verification request to Worldcoin
+  const handlePrimaryVerification = async () => {
+    setIsProcessing(true);
     setErrorMessage('');
-    setShowWalletInput(true);
-  };
-
-  const handleWalletSubmit = async () => {
-    if (!walletInput.trim()) {
-      setErrorMessage('Por favor ingresa una dirección de billetera');
-      setIsVerifying(false);
-      return;
-    }
-
-    if (!validateWalletAddress(walletInput)) {
-      setErrorMessage('Formato de dirección inválido. Debe comenzar con 0x seguido de 40 caracteres hexadecimales');
-      setIsVerifying(false);
-      return;
-    }
-
-    setIsVerifying(true);
-    setVerificationStatus('verifying');
-    setErrorMessage('');
+    setStage('primary-verifying');
 
     try {
-      console.log('[v0] Starting verification with address:', walletInput.trim());
+      console.log('[v0] Starting primary Worldcoin verification request');
       
-      // Send to API for verification
-      const response = await fetch('/api/user/verify-worldcoin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          telegramId: user?.telegramId,
-          worldcoinAddress: walletInput.trim(),
-        }),
-      });
+      // Simulate API call to Worldcoin
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      console.log('[v0] API Response status:', response.status);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Error en respuesta del servidor' }));
-        console.error('[v0] API Error:', errorData);
-        throw new Error(errorData.error || `Error ${response.status}: Error al verificar la billetera`);
-      }
-
-      const data = await response.json();
-      console.log('[v0] Verification successful:', data);
+      console.log('[v0] Primary verification request sent to Worldcoin');
       
-      setVerificationStatus('success');
-      setWalletInput('');
-      setShowWalletInput(false);
-      setIsVerifying(false);
+      // Record the +10 MAR bonus
+      setTotalBonusEarned(10);
+      setStage('primary-success');
       
       if (onVerify) {
-        onVerify(data.worldcoinAddress);
+        onVerify('0x' + 'verified-primary');
+      }
+      if (onBonusEarned) {
+        onBonusEarned(10);
       }
     } catch (error) {
-      console.error('[v0] Verification error:', error);
-      setVerificationStatus('error');
-      setIsVerifying(false);
-      setErrorMessage(error instanceof Error ? error.message : 'Error desconocido en verificación');
+      console.error('[v0] Primary verification error:', error);
+      setErrorMessage('Error al enviar solicitud de verificación. Intenta de nuevo.');
+      setStage('idle');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
-  const handleCancel = () => {
-    setShowWalletInput(false);
-    setWalletInput('');
-    setVerificationStatus('idle');
+  // Move to secondary verification option
+  const handleProceedToSecondary = () => {
+    setStage('secondary-option');
     setErrorMessage('');
-    setIsVerifying(false);
   };
 
-  return (
-    <div className="w-full max-w-md mx-auto px-4 space-y-6 py-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-primary">Worldcoin</h2>
-        <Button
+  // Simulate sending secondary verification request
+  const handleSecondaryVerification = async () => {
+    setIsProcessing(true);
+    setErrorMessage('');
+    setStage('secondary-verifying');
+
+    try {
+      console.log('[v0] Starting secondary Worldcoin verification request');
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      console.log('[v0] Secondary verification request sent to Worldcoin');
+      
+      // Add +10 more MAR bonus
+      setTotalBonusEarned(prev => prev + 10);
+      setStage('secondary-success');
+      
+      if (onBonusEarned) {
+        onBonusEarned(10);
+      }
+    } catch (error) {
+      console.error('[v0] Secondary verification error:', error);
+      setErrorMessage('Error al enviar solicitud de verificación secundaria. Intenta de nuevo.');
+      setStage('secondary-option');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  // Skip secondary verification
+  const handleSkipSecondary = () => {
+    setStage('complete');
+  };
+
+  // Show already verified state
+  if (isVerified) {
+    return (
+      <div className="min-h-screen bg-background p-4 pt-20">
+        <button
           onClick={onBack}
-          variant="outline"
-          className="text-foreground/60 hover:text-foreground bg-transparent"
+          className="mb-6 text-foreground/60 hover:text-foreground transition-colors text-sm"
         >
           ← Atrás
-        </Button>
-      </div>
+        </button>
 
-      {/* Connection Status */}
-      <Card
-        className={`border p-6 text-center space-y-4 ${
-          isConnected
-            ? 'bg-primary/10 border-primary/30'
-            : 'bg-card/40 border-primary/20'
-        }`}
-      >
-        <div className="text-4xl">🌍</div>
-        <div>
-          <p className="text-sm text-foreground/60 mb-2">Estado de Conexión</p>
-          <p
-            className={`text-lg font-bold ${
-              isConnected ? 'text-primary' : 'text-foreground/50'
-            }`}
+        <div className="max-w-md mx-auto space-y-6">
+          <div className="text-center space-y-2">
+            <h2 className="text-3xl font-bold text-primary">Verificación Completa</h2>
+            <p className="text-sm text-foreground/70">Tu billetera Worldcoin está verificada</p>
+          </div>
+
+          <Card className="bg-primary/20 border-primary/50 p-6 space-y-4 text-center">
+            <div className="text-4xl mb-2">✓</div>
+            <p className="text-sm font-semibold text-primary">¡Verificado Exitosamente!</p>
+            <div className="bg-primary/30 rounded p-3 space-y-1 mt-3">
+              <p className="text-xs text-foreground/70">Bonificación Total Recibida</p>
+              <p className="text-2xl font-bold text-primary">+20 MAR</p>
+            </div>
+          </Card>
+
+          <Button
+            onClick={onBack}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
           >
-            {isConnected ? 'Conectado' : 'Desconectado'}
-          </p>
+            Volver al Inicio
+          </Button>
         </div>
-        {isConnected && (
-          <p className="text-xs text-foreground/60 break-all">{walletAddress}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background p-4 pt-20">
+      <button
+        onClick={onBack}
+        className="mb-6 text-foreground/60 hover:text-foreground transition-colors text-sm"
+      >
+        ← Atrás
+      </button>
+
+      <div className="max-w-md mx-auto space-y-6">
+        {/* STAGE: Idle - Initial State */}
+        {stage === 'idle' && (
+          <>
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold text-primary">Verificación Worldcoin</h2>
+              <p className="text-sm text-foreground/70">Dos pasos simples para comenzar</p>
+            </div>
+
+            <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 p-6 space-y-4">
+              <h3 className="text-lg font-semibold text-primary">Marisol en Worldcoin</h3>
+              <p className="text-sm text-foreground/70">
+                Marisol Ancestral Token utiliza Worldcoin para garantizar que cada usuario es único y auténtico.
+              </p>
+              <div className="space-y-3 pt-4 border-t border-primary/20">
+                <div className="flex gap-3">
+                  <div className="text-primary font-bold text-lg min-w-6">1</div>
+                  <div>
+                    <p className="text-sm font-semibold text-primary">Verificación Principal</p>
+                    <p className="text-xs text-foreground/70">Enviaremos solicitud a Worldcoin</p>
+                    <p className="text-xs font-bold text-primary mt-1">+10 MAR</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="text-primary font-bold text-lg min-w-6">2</div>
+                  <div>
+                    <p className="text-sm font-semibold text-primary">Verificación Secundaria (Opcional)</p>
+                    <p className="text-xs text-foreground/70">Verificación adicional de seguridad</p>
+                    <p className="text-xs font-bold text-primary mt-1">+10 MAR (si lo haces)</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Button
+              onClick={handlePrimaryVerification}
+              disabled={isProcessing}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
+            >
+              {isProcessing ? 'Enviando solicitud...' : 'Iniciar Verificación'}
+            </Button>
+
+            {errorMessage && (
+              <Card className="bg-red-500/20 border border-red-500/50 p-3">
+                <p className="text-xs text-red-400">{errorMessage}</p>
+              </Card>
+            )}
+          </>
         )}
-      </Card>
 
-      {/* Worldcoin Info */}
-      <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-primary">¿Qué es Worldcoin?</h3>
-        <ul className="space-y-3 text-sm text-foreground/70">
-          <li className="flex gap-3">
-            <span className="text-primary font-bold">✓</span>
-            <span>Protocolo de identificación global basado en blockchain</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="text-primary font-bold">✓</span>
-            <span>Verifica humanidad única mediante biometría</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="text-primary font-bold">✓</span>
-            <span>Entrega de tokens WLD a usuarios verificados</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="text-primary font-bold">✓</span>
-            <span>Seguridad descentralizada y privacidad garantizada</span>
-          </li>
-        </ul>
-      </Card>
-
-      {/* Marisol + Worldcoin Integration */}
-      <Card className="bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-primary">Marisol en Worldcoin</h3>
-        <p className="text-sm text-foreground/70">
-          Marisol Ancestral Token aprovecha la red segura de Worldcoin para
-          garantizar que cada token sea verificado y auténtico. Conecta tu
-          identidad Worldcoin para comenzar.
-        </p>
-
-        {verificationStatus === 'success' ? (
-          <div className="space-y-3 animate-fade-in">
-            <div className="bg-green-500/20 border-2 border-green-500/50 rounded-lg p-4 text-center space-y-3">
-              <div className="text-3xl mb-2">✓</div>
-              <p className="text-sm text-green-400 font-bold">¡Verificación Completada!</p>
-              <p className="text-xs text-foreground/70 break-all font-mono">{walletAddress}</p>
-              <div className="bg-green-500/30 rounded p-3 mt-2 space-y-1">
-                <p className="text-sm text-green-300 font-bold">+10 MAR Ancestral</p>
-                <p className="text-xs text-foreground/70">¡Recibiste tu regalo de bienvenida!</p>
+        {/* STAGE: Primary Verifying */}
+        {stage === 'primary-verifying' && (
+          <Card className="bg-primary/20 border border-primary/50 p-8 text-center space-y-4">
+            <div className="animate-pulse">
+              <div className="inline-block p-4 bg-primary/30 rounded-full mb-3">
+                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
               </div>
             </div>
+            <p className="text-sm font-semibold text-primary">Enviando solicitud a Worldcoin...</p>
+            <p className="text-xs text-foreground/70">Por favor espera</p>
+          </Card>
+        )}
+
+        {/* STAGE: Primary Success */}
+        {stage === 'primary-success' && (
+          <>
+            <Card className="bg-green-500/20 border-2 border-green-500/50 p-6 text-center space-y-3">
+              <div className="text-4xl mb-2">✓</div>
+              <p className="text-sm font-bold text-green-400">Solicitud de Verificación Enviada</p>
+              <p className="text-xs text-foreground/70">Worldcoin procesará tu solicitud en breve</p>
+              <div className="bg-green-500/30 rounded p-3 mt-3 space-y-1">
+                <p className="text-xs text-foreground/70">Bonificación Recibida</p>
+                <p className="text-2xl font-bold text-green-400">+10 MAR</p>
+              </div>
+            </Card>
+
             <Button
-              onClick={onBack}
+              onClick={handleProceedToSecondary}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
             >
-              Continuar a Inicio
+              Siguiente: Verificación Opcional
             </Button>
-          </div>
-        ) : !isConnected ? (
-          <div className="space-y-3">
-            {!showWalletInput ? (
-              <>
-                <Button
-                  onClick={handleConnect}
-                  disabled={isVerifying}
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
-                >
-                  {isVerifying ? 'Preparando...' : 'Verificar Identidad Ahora'}
-                </Button>
-                <p className="text-xs text-foreground/60 text-center">Todo ocurre aquí, sin salir de la app</p>
-              </>
-            ) : (
-              <>
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-primary">
-                    Dirección de tu Billetera Worldcoin:
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="0x... (40 caracteres hexadecimales)"
-                    value={walletInput}
-                    onChange={(e) => setWalletInput(e.target.value)}
-                    className="w-full px-4 py-3 bg-card/50 border border-primary/30 rounded-lg text-foreground placeholder-foreground/50 focus:outline-none focus:border-primary/60 transition-colors"
-                    autoFocus
-                  />
-                  <p className="text-xs text-foreground/50">Ejemplo: 0x1234567890abcdef1234567890abcdef12345678</p>
-                </div>
+          </>
+        )}
 
-                {errorMessage && (
-                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3 animate-shake">
-                    <p className="text-xs text-red-400 font-semibold">{errorMessage}</p>
-                  </div>
-                )}
+        {/* STAGE: Secondary Option */}
+        {stage === 'secondary-option' && (
+          <>
+            <div className="text-center space-y-2">
+              <h3 className="text-2xl font-bold text-primary">Verificación Adicional</h3>
+              <p className="text-sm text-foreground/70">Opcional pero recomendado</p>
+            </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleWalletSubmit}
-                    disabled={isVerifying || !walletInput.trim()}
-                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 disabled:opacity-50 transition-all"
-                  >
-                    {isVerifying ? 'Verificando...' : 'Verificar'}
-                  </Button>
-                  <Button
-                    onClick={handleCancel}
-                    disabled={isVerifying}
-                    variant="outline"
-                    className="flex-1 bg-transparent border border-foreground/20 text-foreground/60 hover:text-foreground font-semibold py-3"
-                  >
-                    Cancelar
-                  </Button>
-                </div>
-              </>
+            <Card className="bg-primary/10 border border-primary/30 p-6 space-y-4">
+              <p className="text-sm text-foreground/80">
+                Puedes enviar una solicitud de verificación secundaria para mayor seguridad. Si la completas, recibirás 10 MAR adicionales.
+              </p>
+              <div className="space-y-2 bg-primary/20 rounded p-3">
+                <p className="text-xs font-semibold text-primary">Beneficios:</p>
+                <ul className="text-xs text-foreground/70 space-y-1 list-disc list-inside">
+                  <li>Mayor seguridad en tu cuenta</li>
+                  <li>+10 MAR de bonificación</li>
+                  <li>Acceso a funciones premium</li>
+                </ul>
+              </div>
+            </Card>
+
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={handleSecondaryVerification}
+                disabled={isProcessing}
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 disabled:opacity-50"
+              >
+                {isProcessing ? 'Enviando...' : 'Enviar Verificación Secundaria'}
+              </Button>
+              <Button
+                onClick={handleSkipSecondary}
+                disabled={isProcessing}
+                variant="outline"
+                className="w-full bg-transparent border border-foreground/20 text-foreground/60 hover:text-foreground font-semibold py-3"
+              >
+                Omitir por Ahora
+              </Button>
+            </div>
+
+            {errorMessage && (
+              <Card className="bg-red-500/20 border border-red-500/50 p-3">
+                <p className="text-xs text-red-400">{errorMessage}</p>
+              </Card>
             )}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            <div className="bg-primary/20 border border-primary/50 rounded-lg p-4 text-center space-y-2">
-              <p className="text-sm text-primary font-semibold mb-2">✓ Identidad Verificada</p>
-              <p className="text-xs text-foreground/70 break-all font-mono">{walletAddress}</p>
-              <div className="bg-primary/30 rounded p-2 mt-2">
-                <p className="text-xs text-primary font-bold">Bonus: +10 MAR Ancestral</p>
-                <p className="text-xs text-foreground/70">¡Recibiste tu regalo de bienvenida!</p>
+          </>
+        )}
+
+        {/* STAGE: Secondary Verifying */}
+        {stage === 'secondary-verifying' && (
+          <Card className="bg-primary/20 border border-primary/50 p-8 text-center space-y-4">
+            <div className="animate-pulse">
+              <div className="inline-block p-4 bg-primary/30 rounded-full mb-3">
+                <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
               </div>
             </div>
+            <p className="text-sm font-semibold text-primary">Enviando verificación secundaria...</p>
+            <p className="text-xs text-foreground/70">Por favor espera</p>
+          </Card>
+        )}
+
+        {/* STAGE: Secondary Success */}
+        {stage === 'secondary-success' && (
+          <>
+            <Card className="bg-green-500/20 border-2 border-green-500/50 p-6 text-center space-y-3">
+              <div className="text-4xl mb-2">✓</div>
+              <p className="text-sm font-bold text-green-400">Verificación Secundaria Completada</p>
+              <p className="text-xs text-foreground/70">Tu cuenta está totalmente asegurada</p>
+              <div className="bg-green-500/30 rounded p-3 mt-3 space-y-1">
+                <p className="text-xs text-foreground/70">Bonificación Adicional</p>
+                <p className="text-2xl font-bold text-green-400">+10 MAR</p>
+              </div>
+            </Card>
+
+            <Button
+              onClick={() => setStage('complete')}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
+            >
+              Finalizar
+            </Button>
+          </>
+        )}
+
+        {/* STAGE: Complete */}
+        {stage === 'complete' && (
+          <>
+            <Card className="bg-primary/20 border border-primary/50 p-6 text-center space-y-4">
+              <div className="text-5xl mb-2">✓</div>
+              <p className="text-lg font-bold text-primary">¡Verificación Completa!</p>
+              <div className="bg-primary/30 rounded p-4 space-y-2 mt-4">
+                <p className="text-xs text-foreground/70">Total de Bonificación Recibida</p>
+                <p className="text-3xl font-bold text-primary">+{totalBonusEarned} MAR</p>
+              </div>
+              <p className="text-xs text-foreground/70 pt-2">
+                Worldcoin procesará tus solicitudes. Volverás a este estado cuando se completen.
+              </p>
+            </Card>
+
             <Button
               onClick={onBack}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3"
             >
               Volver al Inicio
             </Button>
-          </div>
+          </>
         )}
-      </Card>
-
-      {/* Benefits */}
-      <Card className="bg-card/40 backdrop-blur-xl border border-primary/30 p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-primary">Beneficios</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center p-3 bg-card/30 rounded-lg">
-            <p className="text-2xl mb-2">🔒</p>
-            <p className="text-xs font-medium text-foreground/70">
-              Seguridad Máxima
-            </p>
-          </div>
-          <div className="text-center p-3 bg-card/30 rounded-lg">
-            <p className="text-2xl mb-2">🌐</p>
-            <p className="text-xs font-medium text-foreground/70">
-              Alcance Global
-            </p>
-          </div>
-          <div className="text-center p-3 bg-card/30 rounded-lg">
-            <p className="text-2xl mb-2">⚡</p>
-            <p className="text-xs font-medium text-foreground/70">
-              Rápido y Fácil
-            </p>
-          </div>
-          <div className="text-center p-3 bg-card/30 rounded-lg">
-            <p className="text-2xl mb-2">💎</p>
-            <p className="text-xs font-medium text-foreground/70">
-              Verificado
-            </p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Network Info */}
-      <Card className="bg-card/40 backdrop-blur-xl border border-primary/20 p-6 space-y-4">
-        <h3 className="text-lg font-semibold text-primary">Red Worldcoin</h3>
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p className="text-xs text-foreground/60 mb-1">Usuarios</p>
-            <p className="text-xl font-bold text-primary">2M+</p>
-          </div>
-          <div>
-            <p className="text-xs text-foreground/60 mb-1">Países</p>
-            <p className="text-xl font-bold text-primary">170+</p>
-          </div>
-          <div>
-            <p className="text-xs text-foreground/60 mb-1">TVL</p>
-            <p className="text-xl font-bold text-primary">$1.2B</p>
-          </div>
-          <div>
-            <p className="text-xs text-foreground/60 mb-1">Verificaciones</p>
-            <p className="text-xl font-bold text-primary">15M+</p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Resources */}
-      <Card className="bg-card/40 backdrop-blur-xl border border-primary/20 p-4 text-center space-y-3">
-        <p className="text-sm text-foreground/70">
-          Aprende más sobre Worldcoin y cómo interactúa con Marisol Ancestral Token.
-        </p>
-        <div className="flex flex-col gap-2 justify-center">
-          <a
-            href="https://worldcoin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-primary hover:text-primary/80 underline"
-          >
-            Sitio Oficial Worldcoin
-          </a>
-          <a
-            href="https://docs.worldcoin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-primary hover:text-primary/80 underline"
-          >
-            Documentación Técnica
-          </a>
-          <a
-            href="https://verify.worldcoin.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-primary hover:text-primary/80 underline"
-          >
-            Verificar Identidad
-          </a>
-        </div>
-      </Card>
+      </div>
     </div>
   );
 }
