@@ -110,16 +110,19 @@ export default function HeroSection({ onNavigate, user }: HeroSectionProps) {
         {!isVerified ? (
           <Card className="bg-yellow-500/20 border border-yellow-500/50 p-6 space-y-3">
             <div className="text-center">
-              <p className="text-sm font-semibold text-yellow-600 mb-2">Verificación Requerida</p>
+              <p className="text-sm font-semibold text-yellow-600 mb-2">Próximo Paso: Conectar Billetera</p>
               <p className="text-xs text-foreground/70 leading-relaxed">
-                Para desbloquear todo el potencial de Marisol, debes:
+                ¡Sin salir de esta app! Solo ingresa tu dirección Worldcoin:
               </p>
             </div>
             <ol className="text-xs text-foreground/70 space-y-1 list-decimal list-inside">
-              <li>Verificar tu identidad con Worldcoin</li>
-              <li>Conectar tu billetera Wordcoin</li>
-              <li>¡Recibe 10 monedas MAR de bienvenida!</li>
+              <li>Haz clic en "Verificar Worldcoin" abajo</li>
+              <li>Ingresa tu dirección de billetera (0x...)</li>
+              <li>¡Recibe 10 MAR de bienvenida!</li>
             </ol>
+            <p className="text-xs text-foreground/50 text-center pt-2 border-t border-yellow-500/30">
+              Consigue tu dirección en World App → Billetera
+            </p>
           </Card>
         ) : (
           <Card className="bg-primary/20 border border-primary/50 p-6 space-y-3 text-center">
@@ -127,7 +130,7 @@ export default function HeroSection({ onNavigate, user }: HeroSectionProps) {
               <span className="text-2xl">✓</span>
               <div>
                 <p className="text-sm font-semibold text-primary">¡Verificado!</p>
-                <p className="text-xs text-foreground/70">Billetera conectada</p>
+                <p className="text-xs text-foreground/70">Billetera conectada y 10 MAR recibido</p>
               </div>
             </div>
           </Card>

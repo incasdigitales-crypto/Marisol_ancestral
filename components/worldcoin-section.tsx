@@ -15,58 +15,73 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState<'idle' | 'verifying' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [walletInput, setWalletInput] = useState('');
+  const [showWalletInput, setShowWalletInput] = useState(false);
   const isConnected = user?.worldcoinVerified ?? false;
   const walletAddress = user?.worldcoinAddress || 'No verificado';
+
+  const validateWalletAddress = (address: string): boolean => {
+    // Validate Worldcoin address format (0x followed by 40 hex characters)
+    return /^0x[a-fA-F0-9]{40}$/.test(address.trim());
+  };
 
   const handleConnect = async () => {
     setIsVerifying(true);
     setVerificationStatus('verifying');
     setErrorMessage('');
+    setShowWalletInput(true);
+  };
+
+  const handleWalletSubmit = async () => {
+    if (!walletInput.trim()) {
+      setErrorMessage('Por favor ingresa una dirección de billetera');
+      return;
+    }
+
+    if (!validateWalletAddress(walletInput)) {
+      setErrorMessage('Formato de dirección inválido. Debe comenzar con 0x seguido de 40 caracteres hexadecimales');
+      return;
+    }
 
     try {
-      // Open Worldcoin verification in new window
-      if (typeof window !== 'undefined') {
-        const verificationUrl = 'https://verify.worldcoin.org';
-        const verificationWindow = window.open(verificationUrl, 'worldcoin-verify', 'width=800,height=600');
-        
-        if (!verificationWindow) {
-          throw new Error('No se pudo abrir la ventana de verificación. Por favor, habilita las ventanas emergentes.');
-        }
+      // Send to API for verification
+      const response = await fetch('/api/user/verify-worldcoin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          telegramId: user?.telegramId,
+          worldcoinAddress: walletInput.trim(),
+        }),
+      });
 
-        // Wait for user to complete verification and extract address from Window Crypto API
-        const checkVerification = setInterval(async () => {
-          try {
-            if (verificationWindow.closed) {
-              clearInterval(checkVerification);
-              // Assume user completed verification
-              // In production, you would check actual verification status
-              // For now, we'll prompt user to enter their World App address
-              const address = prompt('Por favor, pega tu dirección de billetera de Worldcoin:');
-              
-              if (address && address.trim()) {
-                setVerificationStatus('success');
-                if (onVerify) {
-                  onVerify(address.trim());
-                }
-              } else {
-                setVerificationStatus('error');
-                setErrorMessage('No se proporcionó dirección válida');
-              }
-            }
-          } catch (err) {
-            console.error('[v0] Error checking verification window:', err);
-          }
-        }, 500);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al verificar la billetera');
+      }
 
-        setTimeout(() => clearInterval(checkVerification), 600000); // Clear after 10 minutes
+      const data = await response.json();
+      setVerificationStatus('success');
+      setWalletInput('');
+      setShowWalletInput(false);
+      
+      if (onVerify) {
+        onVerify(data.worldcoinAddress);
       }
     } catch (error) {
       setVerificationStatus('error');
       setErrorMessage(error instanceof Error ? error.message : 'Error de verificación');
-      console.error('[v0] Worldcoin verification error:', error);
+      console.error('[v0] Verification error:', error);
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const handleCancel = () => {
+    setShowWalletInput(false);
+    setWalletInput('');
+    setVerificationStatus('idle');
+    setErrorMessage('');
+    setIsVerifying(false);
   };
 
   return (
@@ -141,22 +156,57 @@ export default function WorldcoinSection({ onBack, user, onVerify }: WorldcoinSe
 
         {!isConnected ? (
           <div className="space-y-3">
-            <Button
-              onClick={handleConnect}
-              disabled={isVerifying}
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
-            >
-              {isVerifying ? 'Verificando tu identidad...' : 'Verificar Identidad Ahora'}
-            </Button>
-            {verificationStatus === 'error' && (
-              <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
-                <p className="text-xs text-red-400">{errorMessage}</p>
-              </div>
-            )}
-            {verificationStatus === 'verifying' && (
-              <div className="bg-primary/20 border border-primary/50 rounded-lg p-3 text-center">
-                <p className="text-xs text-primary animate-pulse">Por favor, sigue los pasos en la aplicación Worldcoin...</p>
-              </div>
+            {!showWalletInput ? (
+              <>
+                <Button
+                  onClick={handleConnect}
+                  disabled={isVerifying}
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 disabled:opacity-50"
+                >
+                  {isVerifying ? 'Preparando verificación...' : 'Verificar Identidad Ahora'}
+                </Button>
+                <p className="text-xs text-foreground/60 text-center">Sin salir de esta aplicación</p>
+              </>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-semibold text-primary">
+                    Dirección de tu Billetera Worldcoin:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="0x... (40 caracteres hexadecimales)"
+                    value={walletInput}
+                    onChange={(e) => setWalletInput(e.target.value)}
+                    className="w-full px-4 py-3 bg-card/50 border border-primary/30 rounded-lg text-foreground placeholder-foreground/50 focus:outline-none focus:border-primary/60"
+                  />
+                  <p className="text-xs text-foreground/50">Ejemplo: 0x1234567890abcdef1234567890abcdef12345678</p>
+                </div>
+
+                {errorMessage && (
+                  <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-3">
+                    <p className="text-xs text-red-400">{errorMessage}</p>
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleWalletSubmit}
+                    disabled={isVerifying || !walletInput.trim()}
+                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 disabled:opacity-50"
+                  >
+                    {isVerifying ? 'Verificando...' : 'Verificar'}
+                  </Button>
+                  <Button
+                    onClick={handleCancel}
+                    disabled={isVerifying}
+                    variant="outline"
+                    className="flex-1 bg-transparent border-foreground/20 text-foreground/60 hover:text-foreground font-semibold py-3"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         ) : (
