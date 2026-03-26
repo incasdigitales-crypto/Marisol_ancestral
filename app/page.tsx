@@ -7,8 +7,10 @@ import TokenDashboard from '@/components/token-dashboard';
 import WorldcoinSection from '@/components/worldcoin-section';
 import MiningSection from '@/components/mining-section';
 import SavingsSection from '@/components/savings-section';
+import GuideSection from '@/components/guide-section';
+import MarisolChatbot from '@/components/marisol-chatbot';
 
-type View = 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings';
+type View = 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings' | 'guide' | 'marisol';
 
 export default function Home() {
   const [currentView, setCurrentView] = useState<View>('hero');
@@ -65,7 +67,19 @@ export default function Home() {
 
       {/* Main Content Area */}
       <main className="relative z-10 pt-16 pb-24 min-h-screen">
-        {currentView === 'hero' && <HeroSection onNavigate={setCurrentView} />}
+        {currentView === 'hero' && <HeroSection onNavigate={setCurrentView} user={user} />}
+        {currentView === 'guide' && <GuideSection onBack={() => setCurrentView('hero')} />}
+        {currentView === 'marisol' && (
+          <MarisolChatbot
+            user={user}
+            onBack={() => setCurrentView('hero')}
+            onQuestionCost={(cost) => {
+              if (user && cost <= user.balance) {
+                updateBalance(-cost);
+              }
+            }}
+          />
+        )}
         {currentView === 'dashboard' && (
           <TokenDashboard
             user={user}
@@ -112,6 +126,28 @@ export default function Home() {
           >
             <span className="text-lg">✨</span>
             <span className="text-xs font-medium">Inicio</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('guide')}
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+              currentView === 'guide'
+                ? 'text-primary bg-primary/15 border border-primary/30'
+                : 'text-foreground/60 hover:text-foreground'
+            }`}
+          >
+            <span className="text-lg">📖</span>
+            <span className="text-xs font-medium">Guía</span>
+          </button>
+          <button
+            onClick={() => setCurrentView('marisol')}
+            className={`flex flex-col items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 whitespace-nowrap ${
+              currentView === 'marisol'
+                ? 'text-primary bg-primary/15 border border-primary/30'
+                : 'text-foreground/60 hover:text-foreground'
+            }`}
+          >
+            <span className="text-lg">🔮</span>
+            <span className="text-xs font-medium">Marisol</span>
           </button>
           <button
             onClick={() => setCurrentView('dashboard')}

@@ -1,13 +1,18 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import Image from 'next/image';
+import type { UserData } from '@/hooks/use-user';
 
 interface HeroSectionProps {
-  onNavigate: (view: 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'mining') => void;
+  onNavigate: (view: 'hero' | 'dashboard' | 'mining' | 'worldcoin' | 'savings' | 'guide' | 'marisol') => void;
+  user: UserData | null;
 }
 
-export default function HeroSection({ onNavigate }: HeroSectionProps) {
+export default function HeroSection({ onNavigate, user }: HeroSectionProps) {
+  const isVerified = user?.worldcoinVerified ?? false;
+  
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-8 relative overflow-hidden">
       {/* Fondo mystical con imagen */}
@@ -100,6 +105,41 @@ export default function HeroSection({ onNavigate }: HeroSectionProps) {
           </p>
           <p className="text-xs text-foreground/50">Poder ancestral activado</p>
         </div>
+
+        {/* Verification Status */}
+        {!isVerified ? (
+          <Card className="bg-yellow-500/20 border border-yellow-500/50 p-6 space-y-3">
+            <div className="text-center">
+              <p className="text-sm font-semibold text-yellow-600 mb-2">Verificación Worldcoin</p>
+              <p className="text-xs text-foreground/70 leading-relaxed">
+                Dos pasos simples para desbloquear todo el potencial:
+              </p>
+            </div>
+            <div className="space-y-2 text-xs text-foreground/70">
+              <div className="p-2 bg-yellow-500/20 rounded">
+                <p className="font-semibold text-yellow-600">Paso 1: Verificación Automática</p>
+                <p>La app envía solicitud a Worldcoin - +10 MAR</p>
+              </div>
+              <div className="p-2 bg-yellow-500/10 rounded border border-yellow-500/30">
+                <p className="font-semibold text-yellow-600">Paso 2: Verificación Opcional</p>
+                <p>Verificación adicional de seguridad - +10 MAR (si lo haces)</p>
+              </div>
+            </div>
+            <p className="text-xs text-foreground/50 text-center pt-2 border-t border-yellow-500/30">
+              Haz clic en "Verificar Worldcoin" abajo para comenzar
+            </p>
+          </Card>
+        ) : (
+          <Card className="bg-primary/20 border border-primary/50 p-6 space-y-3 text-center">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-2xl">✓</span>
+              <div>
+                <p className="text-sm font-semibold text-primary">¡Verificado!</p>
+                <p className="text-xs text-foreground/70">Billetera conectada y bonificación recibida</p>
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* CTA Buttons */}
         <div className="space-y-3 w-full mt-6">
